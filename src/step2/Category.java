@@ -4,14 +4,19 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Category {
+    //속성
     HashMap<String, List<Product>> categoryMap = new HashMap<String, List<Product>>();
 
+    //생성자
     Category(){
         categoryMap.put("전자제품", elecProduct);
         categoryMap.put("의류", clothProduct);
         categoryMap.put("식품", foodProduct);
     }
 
+    //기능
+
+    //keyset 을 돌면서 카테고리 이름 출력
     public void printCategoryList() {
         int i = 1;
         for (String list : categoryMap.keySet()){
@@ -19,6 +24,7 @@ public class Category {
             i++;
         }
     }
+
 
     List<Product> elecProduct = List.of(
             new Product("Galaxy S25", 1200000, "최신 안드로이드 스마트폰", 10),
