@@ -12,10 +12,4 @@ public class Product {
         this.pDescription = pDescription;
         this.pStock=  pStock;
     }
-
-    public void setpStock(int pStock) {
-        this.pStock = pStock;
-    }
-
-
 }

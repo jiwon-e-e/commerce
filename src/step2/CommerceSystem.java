@@ -3,15 +3,14 @@ package step2;
 import java.util.Scanner;
 
 public class CommerceSystem {
-    ProductList l = new ProductList();
-    Category c = new Category();
+    Category category = new Category();
 
     void start(Scanner sc){
         int sign;
 
         while (true) {
             System.out.println("[ 실시간 커머스 플랫폼 메인 ]");
-            c.printCategoryList();
+            category.printCategoryList();
             System.out.println("0. 종료             | 프로그램 종료");
 
             sign = sc.nextInt();
@@ -22,15 +21,15 @@ public class CommerceSystem {
 
             switch (sign){
                 case 1:
-                    l.getProductList(l.elecProduct);
+                    category.getProductList(category.elecProduct);
                     break;
 
                 case 2:
-                    l.getProductList(l.clothProduct);
+                    category.getProductList(category.clothProduct);
                     break;
 
                 case 3:
-                    l.getProductList(l.foodProduct);
+                    category.getProductList(category.foodProduct);
                     break;
 
                 default:
