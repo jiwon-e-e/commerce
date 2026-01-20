@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class CommerceSystem {
-    Category category = new Category();
+    private Category category = new Category();
     Scanner sc;
 
     CommerceSystem(Scanner sc){
@@ -34,7 +34,7 @@ public class CommerceSystem {
                         break;
                     }
 
-                    if (sign>=1 && sign <= category.categoryMap.size()){
+                    if (sign>=1 && sign <= category.getCategoryMap().size()){
                         break;
                     }else{
                         System.out.println("범위를 벗어난 입력입니다. ");
@@ -53,15 +53,15 @@ public class CommerceSystem {
 
             switch (sign){
                 case 1:
-                    nowCategory = category.elecProduct;
+                    nowCategory = category.getElecProduct();
                     break;
 
                 case 2:
-                    nowCategory = category.clothProduct;
+                    nowCategory = category.getClothProduct();
                     break;
 
                 case 3:
-                    nowCategory = category.foodProduct;
+                    nowCategory = category.getFoodProduct();
                     break;
 
                 default:
@@ -92,9 +92,6 @@ public class CommerceSystem {
             }
         }
         Product p = list.get(idx-1);
-        System.out.printf(idx+". %-15s |%,10d 원| 재고: %,3d 개 | %s\n",p.pName,p.pPrice,p.pStock,p.pDescription);
+        System.out.printf(idx+". %-15s |%,10d 원| 재고: %,3d 개 | %s\n",p.getpName(),p.getpPrice(),p.getpStock(),p.getpDescription());
     }
-
-
-
 }
