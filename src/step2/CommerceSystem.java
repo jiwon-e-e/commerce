@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class CommerceSystem {
-    private Category category = new Category();
+    Category category = Category.getInstance();
     Scanner sc;
 
     CommerceSystem(Scanner sc){
@@ -34,7 +34,7 @@ public class CommerceSystem {
                         break;
                     }
 
-                    if (sign>=1 && sign <= category.getCategoryMap().size()){
+                    if (sign>=1 && sign <= category.getSize()){
                         break;
                     }else{
                         System.out.println("범위를 벗어난 입력입니다. ");
@@ -46,22 +46,19 @@ public class CommerceSystem {
             }
             if (chk==1) break;
 
-
-
-
-            List<Product> nowCategory = new ArrayList<>();
+            String categoryName="잉엥";
 
             switch (sign){
                 case 1:
-                    nowCategory = category.getElecProduct();
+                    categoryName = "전자제품";
                     break;
 
                 case 2:
-                    nowCategory = category.getClothProduct();
+                    categoryName = "의류";
                     break;
 
                 case 3:
-                    nowCategory = category.getFoodProduct();
+                    categoryName = "식품";
                     break;
 
                 default:
@@ -69,8 +66,17 @@ public class CommerceSystem {
                     break;
 
             }
-            category.getProductList(nowCategory);
-            inputNum(nowCategory);
+            System.out.println("categoryName = " + categoryName);
+            List<Product> products = category.getProducts(categoryName);
+            System.out.println("products: "+products);
+
+            if (products == null || products.isEmpty()){
+                System.out.println("상품이 없어요");
+            }else{
+                category.getProductList(products);
+            }
+            System.out.println("chk2");
+            //inputNum(pList);
 
         }
     }
