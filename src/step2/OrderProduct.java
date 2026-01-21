@@ -21,10 +21,7 @@ public class OrderProduct {
         }
     }
 
-    public Customer getCustomer() {
-        return customer;
-    }
-
+    //장바구니에 Product p num개 추가
     public void addProduct(Product p, int num){
         if (chkStock(p,num)){
             Basket b = new Basket(p,num);
@@ -35,21 +32,24 @@ public class OrderProduct {
         }
     }
 
-        boolean chkStock(Product p, int num){
-            if (p.getpStock()<num){
-                System.out.println("재고가 부족합니다. (현재 재고: " + p.getpStock() +" 개)" );
-                return false;
-            }
-            return true;
+    //재고확인 하고싶은 Product와 주문예정 개수 num을 매개변수로 받아 확인
+    boolean chkStock(Product p, int num){
+        if (p.getpStock()<num){
+            System.out.println("재고가 부족합니다. (현재 재고: " + p.getpStock() +" 개)" );
+            return false;
         }
+        return true;
+    }
 
-        public void minusStock(Product p, int num){
-            int beforeMinus = p.getpStock();
-            p.setpStock(p.getpStock()-num);
-            System.out.println(p.getpName() + "재고가 "+beforeMinus+"개 -> "+p.getpStock()+"개로 업데이트 되었습니다.");
-        }
+    //주문 확정시 Stock 차감
+    public void minusStock(Product p, int num){
+        int beforeMinus = p.getpStock();
+        p.setpStock(p.getpStock()-num);
+        System.out.println(p.getpName() + "재고가 "+beforeMinus+"개 -> "+p.getpStock()+"개로 업데이트 되었습니다.");
+    }
 
-        public void plusTotalPrice(Customer c, int price){
+    //주문 확정시 totalPrice 추가
+    public void plusTotalPrice(Customer c, int price){
             c.setTotalPrice(price);
         }
 

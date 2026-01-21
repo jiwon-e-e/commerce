@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Category {
-
     private static Category instance;
 
     private ProductList productList = ProductList.getInstance();
@@ -15,6 +14,7 @@ public class Category {
         //System.out.println("생성자 실행 됨");
     };
 
+    //싱글톤 객체가 없다면 생성, 있다면 getter
     public static Category getInstance(){
         if(instance ==null){
             instance = new Category();
@@ -38,15 +38,13 @@ public class Category {
         }
     }
 
+    //인덱스 n 을 기준으로 특정 카테고리명 출력
+    //ArrayList 가 순서를 반영하지 않기 때문에 전달해줄 때 결정
     public String getCategoryList(int n){
         return productList.getCategory().get(n);
     }
-//
-//    public int getSize(){
-//        return productList.getSize();
-//    }
 
-        //각각의 product 출력
+    //Product List 를 매개변수로 받아 각각의 product 출력
     public void getProductList(List<Product> products){
         int i =1;
         for (Product p : products){

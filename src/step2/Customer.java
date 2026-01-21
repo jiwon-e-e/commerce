@@ -26,11 +26,13 @@ public class Customer {
         this.rank = chkRank(totalPrice);
     }
 
+    // totalPrice 에 새 주문 금액 추가
     public void setTotalPrice(int newOrderPrice) {
         this.totalPrice = this.totalPrice+newOrderPrice;
         this.rank = chkRank(totalPrice);
     }
 
+    //total Price 를 매개변수로 받아 Rank update
     private Rank chkRank(int totalPrice){
         if (totalPrice<500000){
             return BRONZE;
@@ -43,6 +45,7 @@ public class Customer {
         }
     }
 
+    //고객 정보 출력
     public void getCustomer(){
         System.out.println("성명: "+cName);
         System.out.println("메일: "+cMail);

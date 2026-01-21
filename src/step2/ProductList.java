@@ -41,8 +41,6 @@ public class ProductList {
         return new ArrayList<>(categoryMap.keySet());
     }
 
-
-
     private List<Product> elecProduct = List.of(
             new Product("Galaxy S25", 1200000, "최신 안드로이드 스마트폰", 10),
             new Product("iPhone 16", 1350000, "Apple의 최신 스마트폰", 22),
