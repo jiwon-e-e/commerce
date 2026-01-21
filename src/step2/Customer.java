@@ -7,7 +7,6 @@ public class Customer {
     private String cMail;
     private Rank rank;
     private int totalPrice;
-    private Basket basket;
 
     //생성자
     public Customer(String cName, String cMail){
@@ -27,6 +26,10 @@ public class Customer {
         this.rank = chkRank(totalPrice);
     }
 
+    public void setTotalPrice(int newOrderPrice) {
+        this.totalPrice = this.totalPrice+newOrderPrice;
+        this.rank = chkRank(totalPrice);
+    }
 
     private Rank chkRank(int totalPrice){
         if (totalPrice<500000){
@@ -41,11 +44,8 @@ public class Customer {
     }
 
     public void getCustomer(){
-        System.out.printf("""
-                성명: %s
-                email: %s
-                누적 주문금액: %d
-                등급: %Rank
-                """, cName, cMail, totalPrice, rank);
+        System.out.println("성명: "+cName);
+        System.out.println("메일: "+cMail);
+        System.out.println("등급: "+rank);
     }
 }

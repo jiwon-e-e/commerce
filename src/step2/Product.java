@@ -13,6 +13,10 @@ public class Product {
         this.pStock=  pStock;
     }
 
+    public void setpStock(int stock){
+        this.pStock = stock;
+    }
+
     public String getpName() {
         return pName;
     }

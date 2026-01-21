@@ -1,17 +1,24 @@
 package step2;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class OrderProduct {
     Category category = Category.getInstance();
-    private Basket basket;
+    private List<Basket> basket = new ArrayList<>();
     private Customer customer;
 
-//    public OrderProduct(Customer customer, Basket basket){
-//        this.basket = basket;
-//        this.customer = customer;
-//    }
-
-    public Basket getBasket() {
+    public List<Basket> getBasket() {
         return basket;
+    }
+
+    public void printBaskets() {
+        for (Basket b : basket){
+            System.out.printf("%15s | %4d 개 | 각 %d 원\n", b.getProduct().getpName(), b.getQuantity(), b.getProduct().getpPrice());
+        }
+        if (basket.size()==0){
+            System.out.println("장바구니에 아무것도 없네요! 쇼핑해보세요 ㅎㅎ");
+        }
     }
 
     public Customer getCustomer() {
@@ -21,16 +28,29 @@ public class OrderProduct {
     public void addProduct(Product p, int num){
         if (chkStock(p,num)){
             Basket b = new Basket(p,num);
+            //System.out.println(b);
+            basket.add(b);
+            //printBaskets();
             System.out.println(p.getpName()+" "+num+" 개가 장바구니에 추가되었습니다. ");
         }
     }
 
         boolean chkStock(Product p, int num){
-        if (p.getpStock()<num){
-            System.out.println("재고가 부족합니다. (현재 재고: " + p.getpStock() +" 개)" );
-            return false;
+            if (p.getpStock()<num){
+                System.out.println("재고가 부족합니다. (현재 재고: " + p.getpStock() +" 개)" );
+                return false;
+            }
+            return true;
         }
-        return true;
-    }
+
+        public void minusStock(Product p, int num){
+            int beforeMinus = p.getpStock();
+            p.setpStock(p.getpStock()-num);
+            System.out.println(p.getpName() + "재고가 "+beforeMinus+"개 -> "+p.getpStock()+"개로 업데이트 되었습니다.");
+        }
+
+        public void plusTotalPrice(Customer c, int price){
+            c.setTotalPrice(price);
+        }
 
 }

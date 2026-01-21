@@ -11,7 +11,7 @@ public class ProductList {
     private HashMap<String, List<Product>> categoryMap;
 
     private ProductList(){
-        System.out.println("ProductList 생성됨"+ this);
+        //System.out.println("ProductList 생성됨"+ this);
         categoryMap = new HashMap<>();
 
         categoryMap.put("전자제품", elecProduct);
@@ -20,13 +20,28 @@ public class ProductList {
     }
 
     public static ProductList getInstance(){
-        System.out.println("ProductList getInstance 호출됨");
+        //System.out.println("ProductList getInstance 호출됨");
         return instance;
     }
 
-    public int getSize(){
-        return categoryMap.size();
+    //HashMap 전체를 반환
+    public HashMap<String, List<Product>> getCategoryMap() {
+        return categoryMap;
     }
+
+    //카테고리 이름으로 ProductList만 list로 반환
+    public List<Product> getProductByCategory(String category){
+        //System.out.println(categoryMap.get(category));
+        return categoryMap.get(category);
+    }
+
+    //카테고리 이름 (key)만 list로 반환
+    public List<String> getCategory(){
+        //System.out.println(categoryMap.keySet());
+        return new ArrayList<>(categoryMap.keySet());
+    }
+
+
 
     private List<Product> elecProduct = List.of(
             new Product("Galaxy S25", 1200000, "최신 안드로이드 스마트폰", 10),
@@ -51,14 +66,4 @@ public class ProductList {
             new Product("Handmade Toast", 12000, "계란지단 베이컨 불닭마요 토스트", 2)
     );
 
-    //카테고리 이름으로 ProductList만 list로 반환
-    public List<Product> getProductByCategory(String category){
-        //System.out.println(categoryMap.get(category));
-        return categoryMap.get(category);
-    }
-
-    //카테고리 이름 (key)만 list로 반환
-    public List<String> getCategory(){
-        return new ArrayList<>(categoryMap.keySet());
-    }
 }

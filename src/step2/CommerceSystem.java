@@ -10,6 +10,13 @@ public class CommerceSystem {
     Scanner sc;
     OrderProduct orderProduct = new OrderProduct();
 
+    // ============ 임시 고객 만들기 ============
+    Customer me = new Customer("권지원", "jiwonee@example.com", 300000);
+
+
+
+    // =======================================
+
     CommerceSystem(Scanner sc){
         this.sc = sc;
     };
@@ -18,15 +25,19 @@ public class CommerceSystem {
         int sign;
 
         while (true) {
-            System.out.println("[ 실시간 커머스 플랫폼 메인 ]");
+            System.out.println(" [ 실시간 커머스 플랫폼 메인 ]");
             category.printCategoryList();
             System.out.println("0. 종료             | 프로그램 종료");
+            System.out.println(" [ 주문 관리 ]");
+            System.out.println("4. 장바구니 확인     | 장바구니를 확인 후 주문합니다.");
+            System.out.println("5. 주문 취소        | 진행중인 주문을 취소합니다.");
+            System.out.println("6. 내 정보 확인     | 내 정보를 확인합니다. ");
 
             int chk=0;
 
             while(true){
                 try{
-                    System.out.print("자세히 보고싶은 카테고리 번호를 입력해주세요: ");
+                    System.out.print("메뉴 번호 입력: ");
                     sign = sc.nextInt();
 
                     if(sign ==0 ){
@@ -35,11 +46,12 @@ public class CommerceSystem {
                         break;
                     }
 
-                    if (sign>=1 && sign <= category.getSize()){
+                    if (sign>=1 && sign <= 6){
                         break;
                     }else{
                         System.out.println("범위를 벗어난 입력입니다. ");
                     }
+
                 }catch (InputMismatchException e){
                     System.out.println("숫자만 입력해주세요.");
                     sc.next();
@@ -47,39 +59,49 @@ public class CommerceSystem {
             }
             if (chk==1) break;
 
-            String categoryName="잉엥";
-
             switch (sign){
                 case 1:
-                    categoryName = "전자제품";
+                    //category.getCategoryList.get(0)
+                    ifChooseCategory(category.getCategoryList(0));
                     break;
 
                 case 2:
-                    categoryName = "의류";
+                    ifChooseCategory(category.getCategoryList(1));
                     break;
 
                 case 3:
-                    categoryName = "식품";
+                    ifChooseCategory(category.getCategoryList(2));
                     break;
+                case 4:
+                    System.out.println("아래와 같이 주문하시겠습니까?\n");
+                    checkBasket();
+                    break;
+
+                case 6:
+                    System.out.println(" [ 내 정보 ]");
+                    me.getCustomer();
 
                 default:
                     System.out.println("잘못된 입력입니다. 다시 입력해주세요.");
                     break;
 
             }
-            System.out.println("categoryName = " + categoryName);
-            List<Product> products = category.getProducts(categoryName);
-            System.out.println("products: "+products);
 
-            if (products == null || products.isEmpty()){
-                System.out.println("상품이 없어요");
-            }else{
-                category.getProductList(products);
-            }
-            //System.out.println("chk2");
-            inputNum(products);
 
         }
+    }
+
+    void ifChooseCategory(String categoryName){
+        //System.out.println("categoryName = " + categoryName);
+        List<Product> products = category.getProducts(categoryName);
+        //System.out.println("products: "+products);
+
+        if (products == null || products.isEmpty()){
+            System.out.println("상품이 없어요");
+        }else{
+            category.getProductList(products);
+        }
+        inputNum(products);
     }
 
     void inputNum (List<Product> list){
@@ -126,6 +148,31 @@ public class CommerceSystem {
             }catch(InputMismatchException e){
                 System.out.println("숫자만 입력해주세요.");
             }
+        }
+    }
+
+    void checkBasket(){
+        System.out.println("[ 장바구니 내역 ]");
+        orderProduct.printBaskets();
+
+        System.out.println("[ 총 주문 금액 ]");
+        int sum = 0;
+        for (Basket b: orderProduct.getBasket()){
+            sum += b.getProduct().getpPrice() * b.getQuantity();
+        }
+        System.out.println(sum+"원");
+
+        System.out.println("1. 주문 확정      2. 메인으로 돌아가기");
+        int sign = sc.nextInt();
+
+        if (sign ==1){
+            ProductList pList = ProductList.getInstance();
+            for (Basket b: orderProduct.getBasket()){
+                orderProduct.minusStock(b.getProduct(), b.getQuantity());
+            }
+            System.out.println("주문이 완료되었습니다! 총 금액: "+sum+"원");
+            orderProduct.plusTotalPrice(me, sum);
+            orderProduct.getBasket().removeAll(orderProduct.getBasket());
         }
     }
 }

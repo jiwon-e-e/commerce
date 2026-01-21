@@ -19,6 +19,7 @@ public class Category {
         if(instance ==null){
             instance = new Category();
         }
+
         return instance;
     }
 
@@ -28,7 +29,7 @@ public class Category {
         return productList.getProductByCategory(category);
     }
 
-        //keyset 을 돌면서 카테고리 이름 출력
+    //keyset 을 돌면서 카테고리 이름 출력
     public void printCategoryList() {
         int i = 1;
         for (String list : productList.getCategory()){
@@ -37,9 +38,13 @@ public class Category {
         }
     }
 
-    public int getSize(){
-        return productList.getSize();
+    public String getCategoryList(int n){
+        return productList.getCategory().get(n);
     }
+//
+//    public int getSize(){
+//        return productList.getSize();
+//    }
 
         //각각의 product 출력
     public void getProductList(List<Product> products){
