@@ -8,6 +8,7 @@ import java.util.Scanner;
 public class CommerceSystem {
     Category category = Category.getInstance();
     Scanner sc;
+    OrderProduct orderProduct = new OrderProduct();
 
     CommerceSystem(Scanner sc){
         this.sc = sc;
@@ -75,8 +76,8 @@ public class CommerceSystem {
             }else{
                 category.getProductList(products);
             }
-            System.out.println("chk2");
-            //inputNum(pList);
+            //System.out.println("chk2");
+            inputNum(products);
 
         }
     }
@@ -99,5 +100,32 @@ public class CommerceSystem {
         }
         Product p = list.get(idx-1);
         System.out.printf(idx+". %-15s |%,10d 원| 재고: %,3d 개 | %s\n",p.getpName(),p.getpPrice(),p.getpStock(),p.getpDescription());
+        ifAddBasket(p);
+    }
+
+    void ifAddBasket(Product p){
+        System.out.println("위 상품을 장바구니에 추가하시겠습니까?");
+        System.out.println("1. 확인       2. 취소");
+
+        while (true){
+            try{
+                int sign = sc.nextInt();
+                if (sign !=1 && sign != 2){
+                    System.out.println("알맞은 숫자만 입력해주세요.");
+                    continue;
+                }
+                if (sign == 1){
+                    System.out.println("담을 수량을 입력해주세요.");
+                    int quantity = sc.nextInt();
+                    orderProduct.addProduct(p, quantity);
+                    break;
+                }else{
+                    break;
+                }
+
+            }catch(InputMismatchException e){
+                System.out.println("숫자만 입력해주세요.");
+            }
+        }
     }
 }

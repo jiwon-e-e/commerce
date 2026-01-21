@@ -7,6 +7,7 @@ public class Customer {
     private String cMail;
     private Rank rank;
     private int totalPrice;
+    private Basket basket;
 
     //생성자
     public Customer(String cName, String cMail){

@@ -12,7 +12,7 @@ public class Category {
 
     //생성자
     private Category(){
-        System.out.println("생성자 실행 됨");
+        //System.out.println("생성자 실행 됨");
     };
 
     public static Category getInstance(){
@@ -49,28 +49,4 @@ public class Category {
             i++;
         }
     }
-
-
-//    //기능
-//    public HashMap<String, List<Product>> getCategoryMap(){
-//        return categoryMap;
-//    }
-//
-//    //keyset 을 돌면서 카테고리 이름 출력
-//    public void printCategoryList() {
-//        int i = 1;
-//        for (String list : categoryMap.keySet()){
-//            System.out.println(i + ". " + list);
-//            i++;
-//        }
-//    }
-//
-//    //각각의 product 출력
-//    public void getProductList(List<Product> products){
-//        int i =1;
-//        for (Product p : products){
-//            System.out.printf(i+". %-15s |%,10d 원| %s\n",p.getpName(),p.getpPrice(),p.getpDescription());
-//            i++;
-//        }
-//    }
 }

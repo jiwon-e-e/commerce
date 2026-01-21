@@ -61,18 +61,4 @@ public class ProductList {
     public List<String> getCategory(){
         return new ArrayList<>(categoryMap.keySet());
     }
-
-//
-//
-//    public List<Product> getElecProduct() {
-//        return elecProduct;
-//    }
-//
-//    public List<Product> getClothProduct() {
-//        return clothProduct;
-//    }
-//
-//    public List<Product> getFoodProduct() {
-//        return foodProduct;
-//    }
 }
