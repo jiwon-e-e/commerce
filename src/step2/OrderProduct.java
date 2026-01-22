@@ -12,13 +12,15 @@ public class OrderProduct {
         return basket;
     }
 
-    public void printBaskets() {
+    public boolean printBaskets() {
         for (Basket b : basket){
             System.out.printf("%15s | %4d 개 | 각 %d 원\n", b.getProduct().getpName(), b.getQuantity(), b.getProduct().getpPrice());
         }
         if (basket.size()==0){
             System.out.println("장바구니에 아무것도 없네요! 쇼핑해보세요 ㅎㅎ");
+            return false;
         }
+        return true;
     }
 
     //장바구니에 Product p num개 추가

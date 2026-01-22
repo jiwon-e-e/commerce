@@ -15,7 +15,10 @@ public class Administrator {
 
     public boolean chkPW (String pw){
         if (pw.equals(PassWord)) return true;
-        return false;
+        else{
+            System.out.print("다시 입력해주세요: ");
+            return false;
+        }
     }
 
     public void printAdminMenu(){
@@ -27,7 +30,7 @@ public class Administrator {
         System.out.println("0. 메인으로 돌아가기");
     }
 
-    public Product makeProduct(String categoryName){
+    public Product makeNewProduct(String categoryName){
         System.out.println(" [ "+categoryName+"카테고리에 상품 추가 ]");
 
         while (true){

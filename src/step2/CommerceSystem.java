@@ -44,14 +44,11 @@ public class CommerceSystem {
                         System.out.println("커머스 플랫폼을 종료합니다.");
                         chk = 1;
                         break;
-                    }
-
-                    if (sign>=1 && sign <= 7){
-                        break;
-                    }else{
+                    }else if (sign<1 && sign >7){
                         System.out.println("범위를 벗어난 입력입니다. ");
+                    }else{
+                        break;
                     }
-
                 }catch (InputMismatchException e){
                     System.out.println("숫자만 입력해주세요.");
                     sc.next();
@@ -61,7 +58,6 @@ public class CommerceSystem {
 
             switch (sign){
                 case 1:
-                    //category.getCategoryList.get(0)
                     ifChooseCategory(category.getCategoryList(0));
                     break;
 
@@ -73,24 +69,21 @@ public class CommerceSystem {
                     ifChooseCategory(category.getCategoryList(2));
                     break;
                 case 4:
-                    System.out.println("아래와 같이 주문하시겠습니까?\n");
                     checkBasket();
                     break;
                 case 6:
-                    adminLogin();
+                    Administrator a = new Administrator(sc);
+                    int adminChk = adminLogin(a);
+                    adminStart(adminChk, a);
                     break;
-
                 case 7:
                     System.out.println(" [ 내 정보 ]");
                     me.getCustomer();
-
+                    break;
                 default:
                     System.out.println("잘못된 입력입니다. 다시 입력해주세요.");
                     break;
-
             }
-
-
         }
     }
 
@@ -161,157 +154,83 @@ public class CommerceSystem {
     //장바구니 내역 확인
     //주문 확정시 금액출력, 장바구니 비우기, 총계 출력, Product재고 차감
     void checkBasket(){
+        System.out.println("아래와 같이 주문하시겠습니까?\n");
         System.out.println("[ 장바구니 내역 ]");
-        orderProduct.printBaskets();
 
-        System.out.println("[ 총 주문 금액 ]");
-        int sum = 0;
-        for (Basket b: orderProduct.getBasket()){
-            sum += b.getProduct().getpPrice() * b.getQuantity();
-        }
-        System.out.println(sum+"원");
-
-        System.out.println("1. 주문 확정      2. 메인으로 돌아가기");
-        int sign = sc.nextInt();
-
-        if (sign ==1){
+        if(orderProduct.printBaskets()){
+            System.out.println("[ 총 주문 금액 ]");
+            int sum = 0;
             for (Basket b: orderProduct.getBasket()){
-                orderProduct.minusStock(b.getProduct(), b.getQuantity());
+                sum += b.getProduct().getpPrice() * b.getQuantity();
             }
-            System.out.println("주문이 완료되었습니다! 총 금액: "+sum+"원");
-            orderProduct.plusTotalPrice(me, sum);
-            orderProduct.getBasket().removeAll(orderProduct.getBasket());
+            System.out.println(sum+"원");
+
+            System.out.println("1. 주문 확정      2. 메인으로 돌아가기");
+            int sign = sc.nextInt();
+
+            if (sign ==1){
+                for (Basket b: orderProduct.getBasket()){
+                    orderProduct.minusStock(b.getProduct(), b.getQuantity());
+                }
+                System.out.println("주문이 완료되었습니다! 총 금액: "+sum+"원");
+                orderProduct.plusTotalPrice(me, sum);
+                orderProduct.getBasket().removeAll(orderProduct.getBasket());
+            }
         }
+
+
     }
 
-    void adminLogin(){
-        Administrator a = new Administrator(sc);
-        System.out.print("관리자 비밀번호를 입력해주세요:");
+    int adminLogin(Administrator a) {
 
+        System.out.print("관리자 비밀번호를 입력해주세요:");
         int chk = 0;
 
-        for (int i= 0; i<3; i++){
+        for (int i = 0; i < 3; i++) {
             String pw = sc.next();
-            if (a.chkPW(pw)){
+            if (a.chkPW(pw)) {
                 System.out.println("관리자 로그인 완료 ! ! ");
-                chk =1;
+                chk = 1;
                 break;
-            }else{
-                System.out.println("비밀번호가 틀렸습니다."+(i+1)+"/3");
+            } else {
+                System.out.println("비밀번호가 틀렸습니다." + (i + 1) + "/3");
             }
         }
+        return chk;
+    }
 
-        if (chk==1){
-            int sign;
-            while (true){
-                a.printAdminMenu();
-                sign = sc.nextInt();
-                if (sign == 0) break;
+    void adminStart(int chk, Administrator a){
+        if (chk!=1) return;
 
-                if (sign<1 || sign>4){
-                    System.out.println("메뉴 번호를 입력해주세요.");
-                    continue;
-                }
+        int sign;
+        while (true){
+            a.printAdminMenu();
+            sign = sc.nextInt();
+            if (sign == 0) break;
 
-                switch(sign){
-                    case 1:
-                        System.out.println("어떤 카테고리에 상품을 추가하시겠습니까?");
-                        category.printCategoryList();
-                        int num = sc.nextInt();
-                        String categoryName = category.getCategoryList(num-1);
-                        Product newProduct = a.makeProduct(categoryName);
-                        a.addProduct(categoryName, newProduct);
-                        break;
-
-                    case 2:
-                        System.out.print("수정할 상품명을 입력해주세요: ");
-                        String pNameToFix = sc.nextLine();
-                        Optional<Product> productToFixBeforeChk = category.productList.getProductByPName(pNameToFix);
-
-                        if(productToFixBeforeChk.isEmpty()){
-                            System.out.println("유효한 상품명이 아닙니다.");
-                            break;
-                        }
-                        Product productToFix = productToFixBeforeChk.orElseThrow();
-                        System.out.print("현재 상품 정보: ");
-                        productToFix.printProduct();
-
-                        System.out.println("수정할 항목을 선택해주세요:");
-                        System.out.println("1. 가격\n2. 설명\n3. 재고수량\n4. 취소");
-                        int numToFix = sc.nextInt();
-                        //if (numToFix<1 || numToFix>3) continue;
-
-                        if (numToFix==1){
-                            System.out.println("현재 가격: "+productToFix.getpPrice());
-                            System.out.print("새로운 가격을 입력해주세요: ");
-                            productToFix.setpPrice(setPriceOrStockChk());
-                        } else if (numToFix==2){
-                            System.out.println("현재 설명: "+productToFix.getpDescription());
-                            System.out.print("새로운 설명을 입력해주세요: ");
-                            String str = sc.nextLine();
-                            productToFix.setpDescription(str);
-                        } else if (numToFix ==3){
-                            System.out.println("현재 재고: "+productToFix.getpStock());
-                            System.out.print("변경된 재고를 입력해주세요: ");
-                            productToFix.setpStock(setPriceOrStockChk());
-                        } else if (numToFix ==4){
-                            System.out.println("취소했습니다. ");
-                        } else{
-                            System.out.println("잘못된 입력입니다.");
-                        }
-
-                        break;
-
-                    case 3:
-                        sc.nextLine();
-                        System.out.print("삭제할 상품명을 입력해주세요: ");
-                        String pNameToDelete = sc.nextLine();
-                        Optional<Product> productToDeleteBeforeChk = category.productList.getProductByPName(pNameToDelete);
-
-                        if(productToDeleteBeforeChk.isEmpty()){
-                            System.out.println("유효한 상품명이 아닙니다.");
-                            break;
-                        }
-                        Product productToDelete = productToDeleteBeforeChk.orElseThrow();
-
-                        System.out.print("삭제할 상품 정보: ");
-                        productToDelete.printProduct();
-
-                        try {
-                            System.out.println("삭제하시겠습니까? (예: 1번)");
-                            int t = sc.nextInt();
-
-                            if (t==1){
-                                for (List<Product> list: category.productList.getCategoryMap().values()){
-                                    try{
-                                        list.remove(productToDelete);
-                                        System.out.printf("상품 %s 가 삭제되었습니다.\n",productToDelete.getpName());
-                                        break;
-                                    }catch (Exception e){
-                                        System.out.println(e);
-                                    }
-                                }
-                                orderProduct.rmProduct(productToDelete);
-
-                            }else{
-                                System.out.println("삭제가 취소되었습니다.");
-                            }
-                        } catch (InputMismatchException e) {
-                            throw new InputMismatchException("숫자만 입력하시오. . .");
-                        }
-
-
-                        break;
-                    case 4:
-                        System.out.println("[ 전체 상품 현황 ]");
-                        for (String str: category.getCategoryList()){
-                            System.out.println(" [ 카테고리 명: "+str+" ]");
-                            category.ListtoString(category.getProducts(str));
-                        }
-
-                        break;
-                }
+            if (sign<1 || sign>4){
+                System.out.println("메뉴 번호를 입력해주세요.");
+                continue;
             }
+            sc.nextLine();
+
+            switch(sign){
+                case 1:
+                    adminAddProduct(a);
+                    break;
+
+                case 2:
+                    if (adminFixProduct() == 1) continue;
+                    break;
+
+                case 3:
+                    adminRmProduct();
+                    break;
+                case 4:
+                    adminPrintProduct();
+                    break;
+            }
+
         }
     }
 
@@ -324,6 +243,102 @@ public class CommerceSystem {
                 continue;
             }
             return temp;
+        }
+    }
+
+    public void adminAddProduct(Administrator a){
+        System.out.println("어떤 카테고리에 상품을 추가하시겠습니까?");
+        category.printCategoryList();
+        int num = sc.nextInt();
+        String categoryName = category.getCategoryList(num-1);
+        Product newProduct = a.makeNewProduct(categoryName);
+        a.addProduct(categoryName, newProduct);
+    }
+
+    public int adminFixProduct(){
+        System.out.print("수정할 상품명을 입력해주세요: ");
+        String pNameToFix = sc.nextLine();
+        Optional<Product> productToFixBeforeChk = category.productList.getProductByPName(pNameToFix);
+
+        if(productToFixBeforeChk.isEmpty()){
+            System.out.println("유효한 상품명이 아닙니다.");
+            return 1;
+        }
+        Product productToFix = productToFixBeforeChk.orElseThrow();
+        System.out.print("현재 상품 정보: ");
+        productToFix.printProduct();
+
+        System.out.println("수정할 항목을 선택해주세요:");
+        System.out.println("1. 가격\n2. 설명\n3. 재고수량\n4. 취소");
+        int numToFix = sc.nextInt();
+        //if (numToFix<1 || numToFix>3) continue;
+        sc.nextLine();
+
+        if (numToFix==1){
+            System.out.println("현재 가격: "+productToFix.getpPrice());
+            System.out.print("새로운 가격을 입력해주세요: ");
+            productToFix.setpPrice(setPriceOrStockChk());
+        } else if (numToFix==2){
+            System.out.println("현재 설명: "+productToFix.getpDescription());
+            System.out.print("새로운 설명을 입력해주세요: ");
+            String str = sc.nextLine();
+            productToFix.setpDescription(str);
+        } else if (numToFix ==3){
+            System.out.println("현재 재고: "+productToFix.getpStock());
+            System.out.print("변경된 재고를 입력해주세요: ");
+            productToFix.setpStock(setPriceOrStockChk());
+        } else if (numToFix ==4){
+            System.out.println("취소했습니다. ");
+        } else{
+            System.out.println("잘못된 입력입니다.");
+        }
+        return 0;
+    }
+
+    public void adminRmProduct(){
+        sc.nextLine();
+        System.out.print("삭제할 상품명을 입력해주세요: ");
+        String pNameToDelete = sc.nextLine();
+        Optional<Product> productToDeleteBeforeChk = category.productList.getProductByPName(pNameToDelete);
+
+        if(productToDeleteBeforeChk.isEmpty()){
+            System.out.println("유효한 상품명이 아닙니다.");
+            return;
+        }
+        Product productToDelete = productToDeleteBeforeChk.orElseThrow();
+
+        System.out.print("삭제할 상품 정보: ");
+        productToDelete.printProduct();
+
+        try {
+            System.out.println("삭제하시겠습니까? (예: 1번)");
+            int t = sc.nextInt();
+
+            if (t==1){
+                for (List<Product> list: category.productList.getCategoryMap().values()){
+                    try{
+                        list.remove(productToDelete);
+                        System.out.printf("상품 %s 가 삭제되었습니다.\n",productToDelete.getpName());
+                        break;
+                    }catch (Exception e){
+                        System.out.println(e);
+                    }
+                }
+                orderProduct.rmProduct(productToDelete);
+
+            }else{
+                System.out.println("삭제가 취소되었습니다.");
+            }
+        } catch (InputMismatchException e) {
+            throw new InputMismatchException("숫자만 입력하시오. . .");
+        }
+    }
+
+    public void adminPrintProduct(){
+        System.out.println("[ 전체 상품 현황 ]");
+        for (String str: category.getCategoryList()){
+            System.out.println(" [ 카테고리 명: "+str+" ]");
+            category.ListtoString(category.getProducts(str));
         }
     }
 }
