@@ -32,6 +32,17 @@ public class OrderProduct {
         }
     }
 
+    public void rmProduct(Product p){
+        Basket rmBasket = null;
+        for (Basket b : basket){
+            if (b.getProduct().equals(p)){
+                rmBasket = b;
+                break;
+            }
+        }
+        basket.remove(rmBasket);
+    }
+
     //재고확인 하고싶은 Product와 주문예정 개수 num을 매개변수로 받아 확인
     boolean chkStock(Product p, int num){
         if (p.getpStock()<num){

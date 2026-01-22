@@ -58,7 +58,7 @@ public class Administrator {
     }
 
     public void addProduct (String category, Product p){
-        p.printProduct(p);
+        p.printProduct();
         System.out.println("위 정보로 상품을 추가하시겠습니까?");
         System.out.println("1. 확인      2. 취소");
         while (true){
@@ -67,7 +67,10 @@ public class Administrator {
                 pList.addProductWithCategoryName(category, p);
                 System.out.println("상품이 성공적으로 추가되었습니다!");
                 break;
-            }else break;
+            }else{
+                System.out.println("상품추가를 취소합니다.");
+                break;
+            }
         }
     }
 }

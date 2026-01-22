@@ -5,7 +5,7 @@ import java.util.List;
 public class Category {
     private static Category instance;
 
-    private ProductList productList = ProductList.getInstance();
+    ProductList productList = ProductList.getInstance();
     //속성
 
     //생성자
@@ -40,6 +40,8 @@ public class Category {
             i++;
         }
     }
+
+
 
     //인덱스 n 을 기준으로 특정 카테고리명 출력
     //ArrayList 가 순서를 반영하지 않기 때문에 전달해줄 때 결정

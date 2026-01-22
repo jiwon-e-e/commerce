@@ -3,6 +3,7 @@ package step2;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class Basket {
     private Product product;
@@ -21,6 +22,17 @@ public class Basket {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Basket basket)) return false;
+        return Objects.equals(product, basket.product);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(product);
     }
 
     //장바구니 수량 관리하기

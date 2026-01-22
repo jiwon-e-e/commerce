@@ -2,6 +2,7 @@ package step2;
 
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class CommerceSystem {
@@ -126,7 +127,7 @@ public class CommerceSystem {
         }
         Product p = list.get(idx-1);
         System.out.print(idx);
-        p.printProduct(p);
+        p.printProduct();
         ifAddBasket(p);
     }
 
@@ -224,11 +225,81 @@ public class CommerceSystem {
 
                     case 2:
                         System.out.print("수정할 상품명을 입력해주세요: ");
+                        String pNameToFix = sc.nextLine();
+                        Optional<Product> productToFixBeforeChk = category.productList.getProductByPName(pNameToFix);
+
+                        if(productToFixBeforeChk.isEmpty()){
+                            System.out.println("유효한 상품명이 아닙니다.");
+                            break;
+                        }
+                        Product productToFix = productToFixBeforeChk.orElseThrow();
+                        System.out.print("현재 상품 정보: ");
+                        productToFix.printProduct();
+
+                        System.out.println("수정할 항목을 선택해주세요:");
+                        System.out.println("1. 가격\n2. 설명\n3. 재고수량\n4. 취소");
+                        int numToFix = sc.nextInt();
+                        //if (numToFix<1 || numToFix>3) continue;
+
+                        if (numToFix==1){
+                            System.out.println("현재 가격: "+productToFix.getpPrice());
+                            System.out.print("새로운 가격을 입력해주세요: ");
+                            productToFix.setpPrice(setPriceOrStockChk());
+                        } else if (numToFix==2){
+                            System.out.println("현재 설명: "+productToFix.getpDescription());
+                            System.out.print("새로운 설명을 입력해주세요: ");
+                            String str = sc.nextLine();
+                            productToFix.setpDescription(str);
+                        } else if (numToFix ==3){
+                            System.out.println("현재 재고: "+productToFix.getpStock());
+                            System.out.print("변경된 재고를 입력해주세요: ");
+                            productToFix.setpStock(setPriceOrStockChk());
+                        } else if (numToFix ==4){
+                            System.out.println("취소했습니다. ");
+                        } else{
+                            System.out.println("잘못된 입력입니다.");
+                        }
 
                         break;
 
                     case 3:
+                        sc.nextLine();
                         System.out.print("삭제할 상품명을 입력해주세요: ");
+                        String pNameToDelete = sc.nextLine();
+                        Optional<Product> productToDeleteBeforeChk = category.productList.getProductByPName(pNameToDelete);
+
+                        if(productToDeleteBeforeChk.isEmpty()){
+                            System.out.println("유효한 상품명이 아닙니다.");
+                            break;
+                        }
+                        Product productToDelete = productToDeleteBeforeChk.orElseThrow();
+
+                        System.out.print("삭제할 상품 정보: ");
+                        productToDelete.printProduct();
+
+                        try {
+                            System.out.println("삭제하시겠습니까? (예: 1번)");
+                            int t = sc.nextInt();
+
+                            if (t==1){
+                                for (List<Product> list: category.productList.getCategoryMap().values()){
+                                    try{
+                                        list.remove(productToDelete);
+                                        System.out.printf("상품 %s 가 삭제되었습니다.\n",productToDelete.getpName());
+                                        break;
+                                    }catch (Exception e){
+                                        System.out.println(e);
+                                    }
+                                }
+                                orderProduct.rmProduct(productToDelete);
+
+                            }else{
+                                System.out.println("삭제가 취소되었습니다.");
+                            }
+                        } catch (InputMismatchException e) {
+                            throw new InputMismatchException("숫자만 입력하시오. . .");
+                        }
+
 
                         break;
                     case 4:
@@ -241,8 +312,18 @@ public class CommerceSystem {
                         break;
                 }
             }
-
         }
+    }
 
+    public int setPriceOrStockChk(){
+        int temp;
+        while(true){
+            temp = sc.nextInt();
+            if (temp<=0){
+                System.out.println("0 또는 음수로 입력할 수 없습니다.");
+                continue;
+            }
+            return temp;
+        }
     }
 }

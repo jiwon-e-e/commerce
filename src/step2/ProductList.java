@@ -3,6 +3,7 @@ package step2;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 public class ProductList {
 
@@ -35,7 +36,17 @@ public class ProductList {
         return categoryMap.get(category);
     }
 
-
+    //상품명을 받으면 해당 Product를 반환
+    public Optional<Product> getProductByPName(String pName){
+        for (List<Product> list : categoryMap.values()){
+            for (Product p : list){
+                if (p.getpName().equalsIgnoreCase(pName)){
+                    return Optional.of(p);
+                }
+            }
+        }
+        return Optional.empty();
+    }
 
     public void addProductWithCategoryName(String categoryName, Product p){
         categoryMap.get(categoryName).add(p);
@@ -46,6 +57,8 @@ public class ProductList {
         //System.out.println(categoryMap.keySet());
         return new ArrayList<>(categoryMap.keySet());
     }
+
+
 
     private List<Product> elecProduct = new ArrayList<>(List.of(
             new Product("Galaxy S25", 1200000, "최신 안드로이드 스마트폰", 10),
