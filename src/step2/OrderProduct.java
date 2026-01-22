@@ -91,6 +91,7 @@ public class OrderProduct {
 
             System.out.println("1. 주문 확정      2. 메인으로 돌아가기");
             int sign = sc.nextInt();
+            sc.nextLine();
 
             if (sign ==1){
                 for (Basket b: getBasket()){

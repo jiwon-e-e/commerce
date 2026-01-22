@@ -14,7 +14,8 @@ public class Administrator {
     Scanner sc = new Scanner(System.in);
 
     // ---------- 생성자 ----------
-    public Administrator(){
+    public Administrator(OrderProduct orderProduct){
+        this.o = orderProduct;
     }
 
 
@@ -91,6 +92,7 @@ public class Administrator {
         System.out.println("1. 확인      2. 취소");
         while (true){
             int chk = sc.nextInt();
+            sc.nextLine();
             if (chk==1){
                 //this.category.addProductWithCategoryName(categoryName, p);
                 this.category.getCategoryMap().get(categoryName).add(p);
@@ -116,6 +118,7 @@ public class Administrator {
         String categoryName = category.getCategoryList(num-1);
         Product newProduct = makeNewProduct(categoryName);
         checkAndAddProduct(categoryName, newProduct);
+        sc.nextLine();
     }
 
     /**
@@ -127,7 +130,6 @@ public class Administrator {
      * @return
      */
     public int adminFixProduct(){
-        //sc.nextLine();
         System.out.print("수정할 상품명을 입력해주세요: ");
         String pNameToFix = sc.nextLine();
         Optional<Product> productToFixBeforeChk = category.getProductByPName(pNameToFix);
@@ -174,20 +176,16 @@ public class Administrator {
      */
     public void adminRmProduct(){
 
-        System.out.println("category Instance: "+ category);
-        System.out.println("sc = " + sc);
-        System.out.println("this = " + this);
-
-        sc.nextLine();
+        //sc.nextLine();
         System.out.print("삭제할 상품명을 입력해주세요: ");
         String pNameToDelete = sc.nextLine();
-        Optional<Product> productToDeleteBeforeChk = category.getProductByPName(pNameToDelete);
+        Optional<Product> optionalProductToDelete = category.getProductByPName(pNameToDelete);
 
-        if(productToDeleteBeforeChk.isEmpty()){
+        if(optionalProductToDelete.isEmpty()){
             System.out.println("유효한 상품명이 아닙니다.");
             return;
         }
-        Product productToDelete = productToDeleteBeforeChk.orElseThrow();
+        Product productToDelete = optionalProductToDelete.orElseThrow();
 
         System.out.print("삭제할 상품 정보: ");
         productToDelete.printProduct();
@@ -195,12 +193,16 @@ public class Administrator {
         try {
             System.out.println("삭제하시겠습니까? (예: 1번)");
             int t = sc.nextInt();
+            sc.nextLine();
 
             if (t==1){
                 for (List<Product> list: category.getCategoryMap().values()){
                     try{
-                        list.remove(productToDelete);
-                        System.out.printf("상품 %s 가 삭제되었습니다.\n",productToDelete.getpName());
+                        if(list.remove(productToDelete)){
+                            System.out.printf("상품 %s 가 삭제되었습니다.\n",productToDelete.getpName());
+                        }else{
+                            System.out.println("삭제 실패...");
+                        }
                         break;
                     }catch (Exception e){
                         System.out.println(e);
@@ -236,6 +238,7 @@ public class Administrator {
         int temp;
         while(true){
             temp = sc.nextInt();
+            sc.nextLine();
             if (temp<=0){
                 System.out.println("0 또는 음수로 입력할 수 없습니다.");
                 continue;

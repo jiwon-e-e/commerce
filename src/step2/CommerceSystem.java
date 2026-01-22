@@ -9,7 +9,7 @@ public class CommerceSystem {
     Category category = Category.getInstance();
     Scanner sc;
     OrderProduct orderProduct = new OrderProduct();
-    Administrator a = new Administrator();
+    Administrator a = new Administrator(orderProduct);
     Customer nowCustomer = orderProduct.me;
 
 
@@ -47,6 +47,7 @@ public class CommerceSystem {
                 try{
                     System.out.print("메뉴 번호 입력: ");
                     sign = sc.nextInt();
+                    sc.nextLine();
 
                     if(sign ==0 ){
                         System.out.println("커머스 플랫폼을 종료합니다.");
@@ -104,6 +105,7 @@ public class CommerceSystem {
 
             try {
                 sign = sc.nextInt();
+                sc.nextLine();
             } catch (InputMismatchException e) {
                 throw new RuntimeException(e);
             }
@@ -156,6 +158,7 @@ public class CommerceSystem {
             System.out.print("확인하고 싶은 제품 번호를 입력해주세요: ");
             try{
                 idx = sc.nextInt();
+                sc.nextLine();
                 if (idx>=1 && idx <= list.size()){
                     break;
                 }else{
@@ -163,7 +166,7 @@ public class CommerceSystem {
                 }
             }catch (InputMismatchException e) {
                 System.out.println("숫자만 입력해주세요.");
-                sc.next(); //잘못된 입력 제거
+                //sc.next(); //잘못된 입력 제거
             }
         }
         Product p = list.get(idx-1);
@@ -185,6 +188,7 @@ public class CommerceSystem {
         while (true){
             try{
                 int sign = sc.nextInt();
+                sc.nextLine();
                 if (sign !=1 && sign != 2){
                     System.out.println("알맞은 숫자만 입력해주세요.");
                     continue;
@@ -193,6 +197,7 @@ public class CommerceSystem {
                     System.out.println("담을 수량을 입력해주세요.");
                     int quantity = sc.nextInt();
                     orderProduct.addProductToBasket(p, quantity);
+                    sc.nextLine();
                     break;
                 }else{
                     break;
@@ -260,6 +265,7 @@ public class CommerceSystem {
 
                 case 3:
                     a.adminRmProduct();
+                    //orderProduct.rmProductFromBasket(productToDelete);
                     break;
                 case 4:
                     a.adminPrintProduct();
