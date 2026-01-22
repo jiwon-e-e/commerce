@@ -57,17 +57,17 @@ public class CommerceSystem {
             if (chk==1) break;
 
             switch (sign){
-                case 1:
-                    ifChooseCategory(category.getCategoryList(0));
+                case 1,2,3:
+                    ifChooseCategory(category.getCategoryList(sign-1));
                     break;
 
-                case 2:
-                    ifChooseCategory(category.getCategoryList(1));
-                    break;
-
-                case 3:
-                    ifChooseCategory(category.getCategoryList(2));
-                    break;
+//                case 2:
+//                    ifChooseCategory(category.getCategoryList(1));
+//                    break;
+//
+//                case 3:
+//                    ifChooseCategory(category.getCategoryList(2));
+//                    break;
                 case 4:
                     checkBasket();
                     break;
@@ -89,9 +89,46 @@ public class CommerceSystem {
 
     //Category 를 보고싶을 때 (start에서 getCategoryList 를 사용하여 categoryName 전달)
     void ifChooseCategory(String categoryName){
-        //System.out.println("categoryName = " + categoryName);
-        List<Product> products = category.getProducts(categoryName);
-        //System.out.println("products: "+products);
+        System.out.println(" [ "+categoryName+ " 카테고리 ]");
+        System.out.println("1. 전체 상품 보기\n2. 가격대 필터링: 카테고리 평균 이상\n3. 가격대 필터링: 카테고리 평균 이하\n0.뒤로가기");
+
+        List<Product> products=null;
+        int chk = 0;
+        while(true){
+            int sign = 0;
+
+            try {
+                sign = sc.nextInt();
+            } catch (InputMismatchException e) {
+                throw new RuntimeException(e);
+            }
+            double averagePrice = category.getProducts(categoryName).stream()
+                    .mapToInt(p -> p.getpPrice()).average().orElseThrow();
+
+            if (sign ==0){
+                chk = 1;
+                break;
+            }
+            else if (sign ==1){
+                products = category.getProducts(categoryName);
+                break;
+            }else if (sign ==2){
+                products = category.getProducts(categoryName).stream()
+                        .filter(p -> p.getpPrice()>=averagePrice)
+                        .toList();
+                break;
+            }else if (sign ==3){
+                products = category.getProducts(categoryName).stream()
+                        .filter(p -> p.getpPrice()<=averagePrice)
+                        .toList();
+                break;
+            }else{
+                System.out.println("잘못된 입력입니다.");
+                continue;
+            }
+        }
+
+        if(chk==1) return;
 
         if (products == null || products.isEmpty()){
             System.out.println("상품이 없어요");

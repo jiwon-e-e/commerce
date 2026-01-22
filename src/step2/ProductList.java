@@ -54,11 +54,8 @@ public class ProductList {
 
     //카테고리 이름 (key)만 list로 반환
     public List<String> getCategory(){
-        //System.out.println(categoryMap.keySet());
         return new ArrayList<>(categoryMap.keySet());
     }
-
-
 
     private List<Product> elecProduct = new ArrayList<>(List.of(
             new Product("Galaxy S25", 1200000, "최신 안드로이드 스마트폰", 10),
