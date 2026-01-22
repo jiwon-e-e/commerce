@@ -51,4 +51,8 @@ public class Customer {
         System.out.println("메일: "+cMail);
         System.out.println("등급: "+rank);
     }
+
+    public Rank getRank() {
+        return rank;
+    }
 }

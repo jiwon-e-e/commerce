@@ -163,7 +163,12 @@ public class CommerceSystem {
             for (Basket b: orderProduct.getBasket()){
                 sum += b.getProduct().getpPrice() * b.getQuantity();
             }
-            System.out.println(sum+"원");
+            System.out.println("할인 전 금액: " +sum+"원");
+            int sale = (sum* me.getRank().sale)/100;
+            int finalPrice = sum - sale;
+            System.out.println(me.getRank() + "등급 할인("+me.getRank().sale+"%): -"+sale+"원");
+            System.out.println("최종 결제 금액: "+finalPrice+"원");
+
 
             System.out.println("1. 주문 확정      2. 메인으로 돌아가기");
             int sign = sc.nextInt();
@@ -172,13 +177,11 @@ public class CommerceSystem {
                 for (Basket b: orderProduct.getBasket()){
                     orderProduct.minusStock(b.getProduct(), b.getQuantity());
                 }
-                System.out.println("주문이 완료되었습니다! 총 금액: "+sum+"원");
-                orderProduct.plusTotalPrice(me, sum);
+                System.out.println("주문이 완료되었습니다! 총 금액: "+finalPrice+"원");
+                orderProduct.plusTotalPrice(me, finalPrice);
                 orderProduct.getBasket().removeAll(orderProduct.getBasket());
             }
         }
-
-
     }
 
     int adminLogin(Administrator a) {

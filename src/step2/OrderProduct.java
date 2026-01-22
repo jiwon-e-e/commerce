@@ -56,9 +56,7 @@ public class OrderProduct {
 
     //주문 확정시 Stock 차감
     public void minusStock(Product p, int num){
-        int beforeMinus = p.getpStock();
         p.setpStock(p.getpStock()-num);
-        System.out.println(p.getpName() + "재고가 "+beforeMinus+"개 -> "+p.getpStock()+"개로 업데이트 되었습니다.");
     }
 
     //주문 확정시 totalPrice 추가
