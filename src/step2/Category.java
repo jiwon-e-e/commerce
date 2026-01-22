@@ -1,6 +1,5 @@
 package step2;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class Category {
@@ -29,6 +28,10 @@ public class Category {
         return productList.getProductByCategory(category);
     }
 
+    public List<String> getCategoryList(){
+        return productList.getCategory();
+    }
+
     //keyset 을 돌면서 카테고리 이름 출력
     public void printCategoryList() {
         int i = 1;
@@ -45,7 +48,7 @@ public class Category {
     }
 
     //Product List 를 매개변수로 받아 각각의 product 출력
-    public void getProductList(List<Product> products){
+    public void ListtoString(List<Product> products){
         int i =1;
         for (Product p : products){
             System.out.printf(i+". %-15s |%,10d 원| %s\n",p.getpName(),p.getpPrice(),p.getpDescription());

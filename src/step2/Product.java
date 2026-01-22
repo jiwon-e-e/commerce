@@ -32,4 +32,8 @@ public class Product {
     public int getpStock() {
         return pStock;
     }
+
+    public void printProduct(Product p){
+        System.out.printf(". %-15s |%,10d 원| 재고: %,3d 개 | %s\n",p.getpName(),p.getpPrice(),p.getpStock(),p.getpDescription());
+    }
 }
