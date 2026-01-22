@@ -34,14 +34,4 @@ public class Basket {
     public int hashCode() {
         return Objects.hashCode(product);
     }
-
-    //장바구니 수량 관리하기
-//    public void setQuantity(int quantity) {
-//        if (quantity <= 0 ){
-//            System.out.println("장바구니를 삭제합니다. ");
-//
-//        }else{
-//            this.quantity = quantity;
-//        }
-//    }
 }

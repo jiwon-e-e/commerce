@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderProduct {
-    Category category = Category.getInstance();
+    Category c = Category.getInstance();
     private List<Basket> basket = new ArrayList<>();
     private Customer customer;
 
@@ -24,8 +24,8 @@ public class OrderProduct {
     }
 
     //장바구니에 Product p num개 추가
-    public void addProduct(Product p, int num){
-        if (chkStock(p,num)){
+    public void addProductToBasket(Product p, int num){
+        if (c.chkStock(p,num)){
             Basket b = new Basket(p,num);
             //System.out.println(b);
             basket.add(b);
@@ -34,7 +34,7 @@ public class OrderProduct {
         }
     }
 
-    public void rmProduct(Product p){
+    public void rmProductFromBasket(Product p){
         Basket rmBasket = null;
         for (Basket b : basket){
             if (b.getProduct().equals(p)){
@@ -46,18 +46,18 @@ public class OrderProduct {
     }
 
     //재고확인 하고싶은 Product와 주문예정 개수 num을 매개변수로 받아 확인
-    boolean chkStock(Product p, int num){
-        if (p.getpStock()<num){
-            System.out.println("재고가 부족합니다. (현재 재고: " + p.getpStock() +" 개)" );
-            return false;
-        }
-        return true;
-    }
+//    boolean chkStock(Product p, int num){
+//        if (p.getpStock()<num){
+//            System.out.println("재고가 부족합니다. (현재 재고: " + p.getpStock() +" 개)" );
+//            return false;
+//        }
+//        return true;
+//    }
 
-    //주문 확정시 Stock 차감
-    public void minusStock(Product p, int num){
-        p.setpStock(p.getpStock()-num);
-    }
+//    //주문 확정시 Stock 차감
+//    public void minusStock(Product p, int num){
+//        p.setpStock(p.getpStock()-num);
+//    }
 
     //주문 확정시 totalPrice 추가
     public void plusTotalPrice(Customer c, int price){

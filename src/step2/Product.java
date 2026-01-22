@@ -13,8 +13,6 @@ public class Product {
         this.pStock=  pStock;
     }
 
-
-
     public void setpStock(int stock){
         System.out.printf("%s 의 재고가 %d 개 -> %d 개로 수정되었습니다. \n",pName, pStock, stock);
         this.pStock = stock;
