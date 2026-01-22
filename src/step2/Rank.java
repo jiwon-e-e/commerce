@@ -6,6 +6,7 @@ public enum Rank {
     GOLD(10),
     PLATINUM(15);
 
+    //할인율
     int sale;
     Rank(int sale){
         this.sale= sale;

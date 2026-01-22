@@ -6,14 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public class Category {
-    private Category() {
-        categoryMap = new HashMap<>();
 
-        categoryMap.put("전자제품", elecProduct);
-        categoryMap.put("의류", clothProduct);
-        categoryMap.put("식품", foodProduct);
-    }
 
+    // ---------- 속성 ----------
     private List<Product> elecProduct = new ArrayList<>(List.of(
             new Product("Galaxy S25", 1200000, "최신 안드로이드 스마트폰", 10),
             new Product("iPhone 16", 1350000, "Apple의 최신 스마트폰", 22),
@@ -40,6 +35,16 @@ public class Category {
     private static Category instance;
     private HashMap<String, List<Product>> categoryMap;
 
+    // ---------- 생성자 ----------
+    private Category() {
+        categoryMap = new HashMap<>();
+
+        categoryMap.put("전자제품", elecProduct);
+        categoryMap.put("의류", clothProduct);
+        categoryMap.put("식품", foodProduct);
+    }
+
+    // ---------- 기능 ----------
     public static Category getInstance() {
         //System.out.println("ProductList getInstance 호출됨");
         if (instance == null) {
@@ -54,8 +59,8 @@ public class Category {
     }
 
     //getter - String 카테고리 이름을 매개변수로 해당 ProductList만 list<Product>로 반환
-    public List<Product> getProductByCategory(String category) {
-        return categoryMap.get(category);
+    public List<Product> getProductByCategory(String categoryName) {
+        return categoryMap.get(categoryName);
     }
 
     //getter - String 상품 이름을 매개변수로 해당 Product 만 Optional<Product> 로 반환
@@ -70,6 +75,12 @@ public class Category {
         return Optional.empty();
     }
 
+    /**
+     * Product 의 재고가 사용자가 원하는 만큼 차감해도 되는지 확인
+     * @param p 사용자가 장바구니에 담으려는 Product
+     * @param num 사용자가 원하는 재고
+     * @return
+     */
     boolean chkStock(Product p, int num){
         if (p.getpStock()<num){
             System.out.println("재고가 부족합니다. (현재 재고: " + p.getpStock() +" 개)" );
@@ -78,19 +89,25 @@ public class Category {
         return true;
     }
 
-    //주문 확정시 Stock 차감
+    //주문 확정시 해당 Product 의 Stock 차감
     public void minusStock(Product p, int num){
         p.setpStock(p.getpStock()-num);
     }
 
-    //인덱스 n 을 기준으로 특정 카테고리명 출력
-    //ArrayList 가 순서를 반영하지 않기 때문에 전달해줄 때 결정
+    /**
+     * n 번째 카테고리명 1개 반환
+     * ArrayList 가 순서를 반영하지 않기 때문에 전달해줄 때 결정
+     * @param n
+     * @return n 번째 카테고리 이름
+     */
     public String getCategoryList(int n) {
         return getKeyList().get(n);
     }
 
-    //Product List 를 매개변수로 받아 각각의 product 출력
-    // 이름변경 필요
+    /**
+     * 매개변수로 받은 리스트 내에 있는 Product 들을 출력
+     * @param products 리스트
+     */
     public void printProductsByList(List<Product> products) {
         int i = 1;
         for (Product p : products) {
@@ -99,13 +116,7 @@ public class Category {
         }
     }
 
-    // 카테고리 이름과 Product 객체를 받아서 Map <카테고리명, Product> 로 추가
-    public void addProductWithCategoryName(String categoryName, Product p) {
-        categoryMap.get(categoryName).add(p);
-    }
-
-    //카테고리 이름 (key)만 list로 반환
-    // 이름 바꿔주기
+    //카테고리 이름 (keyset)만 list로 반환
     public List<String> getKeyList() {
         return new ArrayList<>(categoryMap.keySet());
     }

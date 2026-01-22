@@ -6,16 +6,18 @@ import java.util.Map;
 import java.util.Objects;
 
 public class Basket {
+    // ---------- 속성 ----------
     private Product product;
     private int quantity;
 
-    //Basket 생성자, 장바구니 담을때마다 새로 생성
+    // ---------- 생성자 ----------
+    // 장바구니 담을 때 마다 새로 생성됨
     public Basket(Product product, int quantity) {
         this.product = product;
         this.quantity = quantity;
     }
 
-    //getter, setter
+    // ---------- 기능 ----------
     public Product getProduct() {
         return product;
     }

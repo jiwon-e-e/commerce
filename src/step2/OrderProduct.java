@@ -2,16 +2,30 @@ package step2;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class OrderProduct {
-    Category c = Category.getInstance();
+    // ---------- 속성 ----------
+    Scanner sc = new Scanner(System.in);
+    Category category = Category.getInstance();
     private List<Basket> basket = new ArrayList<>();
     private Customer customer;
 
+    // ============ 임시 고객 만들기 ============
+    Customer me = new Customer("권지원", "jiwonee@example.com", 300000);
+    // =======================================
+
+    // ---------- 생성자 ---------- 기본생성자 사용
+
+    // ---------- 기능 ----------
     public List<Basket> getBasket() {
         return basket;
     }
 
+    /**
+     * basket 에 담긴 상품과 해당 상품의 개수를 출력합니다.
+     * @return boolean : 장바구니가 비었다면 false, 하나라도 들었다면 true
+     */
     public boolean printBaskets() {
         for (Basket b : basket){
             System.out.printf("%15s | %4d 개 | 각 %d 원\n", b.getProduct().getpName(), b.getQuantity(), b.getProduct().getpPrice());
@@ -24,16 +38,25 @@ public class OrderProduct {
     }
 
     //장바구니에 Product p num개 추가
+
+    /**
+     * 장바구니에 상품(p) (num) 개를 추가합니다
+     * @param p 장바구니에 추가할 상품
+     * @param num 해당 상품 개수
+     */
     public void addProductToBasket(Product p, int num){
-        if (c.chkStock(p,num)){
+        if (category.chkStock(p,num)){
             Basket b = new Basket(p,num);
-            //System.out.println(b);
             basket.add(b);
-            //printBaskets();
             System.out.println(p.getpName()+" "+num+" 개가 장바구니에 추가되었습니다. ");
         }
     }
 
+    /**
+     * 장바구니에 담긴 상품(p) 를 삭제합니다.
+     * p를 기준으로 basket 을 찾아 basketList 에서 삭제함
+     * @param p 삭제할 상품
+     */
     public void rmProductFromBasket(Product p){
         Basket rmBasket = null;
         for (Basket b : basket){
@@ -45,21 +68,46 @@ public class OrderProduct {
         basket.remove(rmBasket);
     }
 
-    //재고확인 하고싶은 Product와 주문예정 개수 num을 매개변수로 받아 확인
-//    boolean chkStock(Product p, int num){
-//        if (p.getpStock()<num){
-//            System.out.println("재고가 부족합니다. (현재 재고: " + p.getpStock() +" 개)" );
-//            return false;
-//        }
-//        return true;
-//    }
+    /**
+     * 장바구니 내역 확인 후 주문
+     * 주문 확정시 금액출력, 장바구니 비우기, 총계 출력, Product재고 차감
+     */
+    void checkBasket(){
+        System.out.println("아래와 같이 주문하시겠습니까?\n");
+        System.out.println("[ 장바구니 내역 ]");
 
-//    //주문 확정시 Stock 차감
-//    public void minusStock(Product p, int num){
-//        p.setpStock(p.getpStock()-num);
-//    }
+        if(printBaskets()){
+            System.out.println("[ 총 주문 금액 ]");
+            int sum = 0;
+            for (Basket b: getBasket()){
+                sum += b.getProduct().getpPrice() * b.getQuantity();
+            }
+            System.out.println("할인 전 금액: " +sum+"원");
+            int sale = (sum* me.getRank().sale)/100;
+            int finalPrice = sum - sale;
+            System.out.println(me.getRank() + "등급 할인("+me.getRank().sale+"%): -"+sale+"원");
+            System.out.println("최종 결제 금액: "+finalPrice+"원");
 
-    //주문 확정시 totalPrice 추가
+
+            System.out.println("1. 주문 확정      2. 메인으로 돌아가기");
+            int sign = sc.nextInt();
+
+            if (sign ==1){
+                for (Basket b: getBasket()){
+                    category.minusStock(b.getProduct(), b.getQuantity());
+                }
+                System.out.println("주문이 완료되었습니다! 총 금액: "+finalPrice+"원");
+                plusTotalPrice(me, finalPrice);
+                getBasket().removeAll(getBasket());
+            }
+        }
+    }
+
+    /**
+     * 고객의 total price 업데이트
+     * @param c 고객 객체
+     * @param price 추가된 금액
+     */
     public void plusTotalPrice(Customer c, int price){
             c.setTotalPrice(price);
         }

@@ -2,30 +2,32 @@ package step2;
 
 import java.util.InputMismatchException;
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 
 public class CommerceSystem {
+    // ---------- 속성 ----------
     Category category = Category.getInstance();
     Scanner sc;
     OrderProduct orderProduct = new OrderProduct();
+    Administrator a = new Administrator();
+    Customer nowCustomer = orderProduct.me;
 
+
+    // ---------- 생성자 ----------
     public CommerceSystem(Scanner sc){
         this.sc = sc;
     };
 
-    Administrator a = new Administrator();
+    // ---------- 기능 ----------
 
-    // ============ 임시 고객 만들기 ============
-    Customer me = new Customer("권지원", "jiwonee@example.com", 300000);
-    // =======================================
-
-    //commerce System 생성자
-//    CommerceSystem(Scanner sc){
-//        this.sc = sc;
-//    };
-
-    // 수정 필요: Main 플랫폼에서 선택
+    /**
+     * 메인메뉴 출력, 선택받아 각 메뉴 별 메소드 호출
+     * 1~3: 카테고리 : ifChooseCategory
+     * 4: 장바구니 확인 : checkBasket
+     * 5. 구현 없음
+     * 6. 관리자 모드 진입 : startAdmin
+     * 7. 내 정보 출력 : getCustomer
+     */
     void start(){
         int sign;
 
@@ -66,25 +68,16 @@ public class CommerceSystem {
                 case 1,2,3:
                     ifChooseCategory(category.getCategoryList(sign-1));
                     break;
-
-//                case 2:
-//                    ifChooseCategory(category.getCategoryList(1));
-//                    break;
-//
-//                case 3:
-//                    ifChooseCategory(category.getCategoryList(2));
-//                    break;
                 case 4:
-                    checkBasket();
+                    orderProduct.checkBasket();
                     break;
                 case 6:
-                    //Administrator a = new Administrator(sc);
                     int adminChk = adminLogin(a);
-                    adminStart(adminChk, a);
+                    startAdmin(adminChk, a);
                     break;
                 case 7:
                     System.out.println(" [ 내 정보 ]");
-                    me.getCustomer();
+                    nowCustomer.getCustomer();
                     break;
                 default:
                     System.out.println("잘못된 입력입니다. 다시 입력해주세요.");
@@ -94,6 +87,12 @@ public class CommerceSystem {
     }
 
     //Category 를 보고싶을 때 (start에서 getCategoryList 를 사용하여 categoryName 전달)
+
+    /**
+     * 원하는 조건의 상품 리스트를 출력하고 해당 리스트 내부 상품 선택
+     * (inputNum
+     * @param categoryName
+     */
     void ifChooseCategory(String categoryName){
         System.out.println(" [ "+categoryName+ " 카테고리 ]");
         System.out.println("1. 전체 상품 보기\n2. 가격대 필터링: 카테고리 평균 이상\n3. 가격대 필터링: 카테고리 평균 이하\n0.뒤로가기");
@@ -141,11 +140,17 @@ public class CommerceSystem {
         }else{
             category.printProductsByList(products);
         }
-        inputNum(products);
+        selectProductAndAddToBasket(products);
     }
 
     //카테고리 목록 중에서 원하는 Product 입력받아 상세정보 출력, 장바구니에 추가할건지 AddBasket 호출
-    void inputNum (List<Product> list){
+
+    /**
+     * List 에서 제품번호를 입력받고 해당 제품을 장바구니에 추가할건지 확인
+     * ifAddBasket 호출
+     * @param list
+     */
+    void selectProductAndAddToBasket(List<Product> list){
         int idx;
         while(true){
             System.out.print("확인하고 싶은 제품 번호를 입력해주세요: ");
@@ -164,11 +169,16 @@ public class CommerceSystem {
         Product p = list.get(idx-1);
         System.out.print(idx);
         p.printProduct();
-        ifAddBasket(p);
+        requestAddToBasket(p);
     }
 
-    //Product 정보를 받아서 추가하기 , 주문 클래스 (OrderProduct)의 addProduct 호출
-    void ifAddBasket(Product p){
+    /**
+     * 장바구니에 추가할건지 확인
+     * 수량입력 받기
+     * orderProduct 클래스의 addProductToBasket 호출
+     * @param p 추가할 제품 객체
+     */
+    void requestAddToBasket(Product p){
         System.out.println("위 상품을 장바구니에 추가하시겠습니까?");
         System.out.println("1. 확인       2. 취소");
 
@@ -194,39 +204,11 @@ public class CommerceSystem {
         }
     }
 
-    //장바구니 내역 확인
-    //주문 확정시 금액출력, 장바구니 비우기, 총계 출력, Product재고 차감
-    void checkBasket(){
-        System.out.println("아래와 같이 주문하시겠습니까?\n");
-        System.out.println("[ 장바구니 내역 ]");
-
-        if(orderProduct.printBaskets()){
-            System.out.println("[ 총 주문 금액 ]");
-            int sum = 0;
-            for (Basket b: orderProduct.getBasket()){
-                sum += b.getProduct().getpPrice() * b.getQuantity();
-            }
-            System.out.println("할인 전 금액: " +sum+"원");
-            int sale = (sum* me.getRank().sale)/100;
-            int finalPrice = sum - sale;
-            System.out.println(me.getRank() + "등급 할인("+me.getRank().sale+"%): -"+sale+"원");
-            System.out.println("최종 결제 금액: "+finalPrice+"원");
-
-
-            System.out.println("1. 주문 확정      2. 메인으로 돌아가기");
-            int sign = sc.nextInt();
-
-            if (sign ==1){
-                for (Basket b: orderProduct.getBasket()){
-                    category.minusStock(b.getProduct(), b.getQuantity());
-                }
-                System.out.println("주문이 완료되었습니다! 총 금액: "+finalPrice+"원");
-                orderProduct.plusTotalPrice(me, finalPrice);
-                orderProduct.getBasket().removeAll(orderProduct.getBasket());
-            }
-        }
-    }
-
+    /**
+     * 관리자를 입력받아 비밀번호 확인 받기, 3번틀리면 오류메시지 출력
+     * @param a 관리자 객체
+     * @return
+     */
     int adminLogin(Administrator a) {
 
         System.out.print("관리자 비밀번호를 입력해주세요:");
@@ -245,7 +227,14 @@ public class CommerceSystem {
         return chk;
     }
 
-    void adminStart(int chk, Administrator a){
+    /**
+     * 관리자 메뉴 실행
+     * 1: 추가, 2: 수정, 3: 삭제, 4: 현재 메뉴 확인
+     * 관리자 비밀번호를 입력했는지 한 번 더 확인
+     * @param chk 관리자 인증 통과했는지 확인
+     * @param a 관리자 객체
+     */
+    void startAdmin(int chk, Administrator a){
         if (chk!=1) return;
 
         int sign;
@@ -262,7 +251,7 @@ public class CommerceSystem {
 
             switch(sign){
                 case 1:
-                    a.adminAddProduct(a);
+                    a.adminAddProduct();
                     break;
 
                 case 2:
@@ -279,112 +268,4 @@ public class CommerceSystem {
 
         }
     }
-
-//    public int setPriceOrStockChk(){
-//        int temp;
-//        while(true){
-//            temp = sc.nextInt();
-//            if (temp<=0){
-//                System.out.println("0 또는 음수로 입력할 수 없습니다.");
-//                continue;
-//            }
-//            return temp;
-//        }
-//    }
-//
-//    public void adminAddProduct(Administrator a){
-//        System.out.println("어떤 카테고리에 상품을 추가하시겠습니까?");
-//        category.printCategoryList();
-//        int num = sc.nextInt();
-//        String categoryName = category.getCategoryList(num-1);
-//        Product newProduct = a.makeNewProduct(categoryName);
-//        a.addProduct(categoryName, newProduct);
-//    }
-//
-//    public int adminFixProduct(){
-//        System.out.print("수정할 상품명을 입력해주세요: ");
-//        String pNameToFix = sc.nextLine();
-//        Optional<Product> productToFixBeforeChk = category.getProductByPName(pNameToFix);
-//
-//        if(productToFixBeforeChk.isEmpty()){
-//            System.out.println("유효한 상품명이 아닙니다.");
-//            return 1;
-//        }
-//        Product productToFix = productToFixBeforeChk.orElseThrow();
-//        System.out.print("현재 상품 정보: ");
-//        productToFix.printProduct();
-//
-//        System.out.println("수정할 항목을 선택해주세요:");
-//        System.out.println("1. 가격\n2. 설명\n3. 재고수량\n4. 취소");
-//        int numToFix = sc.nextInt();
-//        //if (numToFix<1 || numToFix>3) continue;
-//        sc.nextLine();
-//
-//        if (numToFix==1){
-//            System.out.println("현재 가격: "+productToFix.getpPrice());
-//            System.out.print("새로운 가격을 입력해주세요: ");
-//            productToFix.setpPrice(setPriceOrStockChk());
-//        } else if (numToFix==2){
-//            System.out.println("현재 설명: "+productToFix.getpDescription());
-//            System.out.print("새로운 설명을 입력해주세요: ");
-//            String str = sc.nextLine();
-//            productToFix.setpDescription(str);
-//        } else if (numToFix ==3){
-//            System.out.println("현재 재고: "+productToFix.getpStock());
-//            System.out.print("변경된 재고를 입력해주세요: ");
-//            productToFix.setpStock(setPriceOrStockChk());
-//        } else if (numToFix ==4){
-//            System.out.println("취소했습니다. ");
-//        } else{
-//            System.out.println("잘못된 입력입니다.");
-//        }
-//        return 0;
-//    }
-//
-//    public void adminRmProduct(){
-//        sc.nextLine();
-//        System.out.print("삭제할 상품명을 입력해주세요: ");
-//        String pNameToDelete = sc.nextLine();
-//        Optional<Product> productToDeleteBeforeChk = category.getProductByPName(pNameToDelete);
-//
-//        if(productToDeleteBeforeChk.isEmpty()){
-//            System.out.println("유효한 상품명이 아닙니다.");
-//            return;
-//        }
-//        Product productToDelete = productToDeleteBeforeChk.orElseThrow();
-//
-//        System.out.print("삭제할 상품 정보: ");
-//        productToDelete.printProduct();
-//
-//        try {
-//            System.out.println("삭제하시겠습니까? (예: 1번)");
-//            int t = sc.nextInt();
-//
-//            if (t==1){
-//                for (List<Product> list: category.getCategoryMap().values()){
-//                    try{
-//                        list.remove(productToDelete);
-//                        System.out.printf("상품 %s 가 삭제되었습니다.\n",productToDelete.getpName());
-//                        break;
-//                    }catch (Exception e){
-//                        System.out.println(e);
-//                    }
-//                }
-//                orderProduct.rmProductFromBasket(productToDelete);
-//
-//            }else{
-//                System.out.println("삭제가 취소되었습니다.");
-//            }
-//        } catch (InputMismatchException e) {
-//            throw new InputMismatchException("숫자만 입력하시오. . .");
-//        }
-//    }
-//
-//    public void adminPrintProduct(){
-//        System.out.println("[ 전체 상품 현황 ]");
-//        for (String str: category.getKeyList()){
-//            System.out.println(" [ 카테고리 명: "+str+" ]");
-//            category.printProductsByList(category.getProductByCategory(str));
-//        }
-//    }
 }

@@ -3,12 +3,13 @@ package step2;
 import static step2.Rank.*;
 
 public class Customer {
+    // ---------- 속성 ----------
     private String cName;
     private String cMail;
     private Rank rank;
     private int totalPrice;
 
-    //생성자
+    // ---------- 생성자 ----------
     public Customer(String cName, String cMail){
         this.cName = cName;
         this.cMail = cMail;
@@ -26,6 +27,7 @@ public class Customer {
         this.rank = chkRank(totalPrice);
     }
 
+    // ---------- 기능 ----------
     // totalPrice 에 새 주문 금액 추가
     public void setTotalPrice(int newOrderPrice) {
         this.totalPrice = this.totalPrice+newOrderPrice;

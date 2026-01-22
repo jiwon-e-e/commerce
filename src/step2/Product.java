@@ -1,11 +1,13 @@
 package step2;
 
 public class Product {
+    // ---------- 속성 ----------
     private String pName;
     private int pPrice;
     private String pDescription;
     private int pStock;
 
+    // ---------- 생성자 ----------
     Product(String pName, int pPrice, String pDescription, int pStock){
         this.pName = pName;
         this.pPrice = pPrice;
@@ -13,6 +15,7 @@ public class Product {
         this.pStock=  pStock;
     }
 
+    // ---------- 기능 ----------
     public void setpStock(int stock){
         System.out.printf("%s 의 재고가 %d 개 -> %d 개로 수정되었습니다. \n",pName, pStock, stock);
         this.pStock = stock;
