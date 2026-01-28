@@ -194,17 +194,25 @@ public class CommerceSystem {
                     continue;
                 }
                 if (sign == 1){
-                    System.out.println("담을 수량을 입력해주세요.");
                     int quantity;
                     while(true){
+                        System.out.println("담을 수량을 입력해주세요.");
                         quantity = sc.nextInt();
                         if (quantity<=0){
                             System.out.println("담을 개수를 정확히 입력해주세요.");
                             continue;
                         }
+                        if (orderProduct.getQuantityByProduct(p)+quantity > p.getpStock()){
+                            System.out.println("현재 재고보다 장바구니에 담긴 개수가 더 많습니다.");
+                            System.out.println("현재 재고: "+ p.getpStock()+" " +
+                                    "| 장바구니 개수: "+orderProduct.getQuantityByProduct(p)+" + "+quantity);
+                            continue;
+                        }
                         break;
                     }
                     orderProduct.addProductToBasket(p, quantity);
+                    System.out.println(p.getpName()+" "+quantity+" 개가 장바구니에 추가되었습니다. ");
+
                     sc.nextLine();
                     break;
                 }else{

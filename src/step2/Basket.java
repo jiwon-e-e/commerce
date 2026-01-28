@@ -26,6 +26,10 @@ public class Basket {
         return quantity;
     }
 
+    public void setQuantity(int quantity){
+        this.quantity += quantity;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Basket basket)) return false;

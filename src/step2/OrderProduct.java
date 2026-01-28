@@ -3,6 +3,7 @@ package step2;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class OrderProduct {
     // ---------- 속성 ----------
@@ -21,6 +22,15 @@ public class OrderProduct {
     // ---------- 기능 ----------
     public List<Basket> getBasket() {
         return basket;
+    }
+
+    public int getQuantityByProduct(Product p){
+        for (Basket b : basket){
+            if (b.getProduct().equals(p)){
+                return b.getQuantity();
+            }
+        }
+        return 0;
     }
 
     /**
@@ -51,9 +61,16 @@ public class OrderProduct {
      */
     public void addProductToBasket(Product p, int num){
         if (category.chkStock(p,num)){
-            Basket b = new Basket(p,num);
-            basket.add(b);
-            System.out.println(p.getpName()+" "+num+" 개가 장바구니에 추가되었습니다. ");
+
+            for (Basket b : basket){
+                if (b.getProduct().equals(p)){
+                    b.setQuantity(num);
+                    return;
+                }
+            }
+
+            Basket newBasket = new Basket(p,num);
+            basket.add(newBasket);
         }
     }
 
@@ -78,8 +95,6 @@ public class OrderProduct {
      * 주문 확정시 금액출력, 장바구니 비우기, 총계 출력, Product재고 차감
      */
     void checkBasket(){
-
-
         if(printBaskets()){
             System.out.println("[ 총 주문 금액 ]");
             int sum = 0;
