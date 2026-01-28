@@ -7,15 +7,14 @@ import java.util.Scanner;
 public class CommerceSystem {
     // ---------- 속성 ----------
     Category category = Category.getInstance();
-    Scanner sc;
+    Scanner sc = Main.sc;
     OrderProduct orderProduct = new OrderProduct();
     Administrator a = new Administrator(orderProduct);
     Customer nowCustomer = orderProduct.me;
 
 
     // ---------- 생성자 ----------
-    public CommerceSystem(Scanner sc){
-        this.sc = sc;
+    public CommerceSystem(){
     };
 
     // ---------- 기능 ----------
@@ -60,7 +59,7 @@ public class CommerceSystem {
                     }
                 }catch (InputMismatchException e){
                     System.out.println("숫자만 입력해주세요.");
-                    sc.next();
+                    sc.nextLine();
                 }
             }
             if (chk==1) break;
@@ -105,9 +104,10 @@ public class CommerceSystem {
 
             try {
                 sign = sc.nextInt();
-                sc.nextLine();
+                //sc.nextLine();
             } catch (InputMismatchException e) {
-                throw new RuntimeException(e);
+                System.out.println("잘못된 입력입니다.");
+                sc.nextLine();
             }
             double averagePrice = category.getProductByCategory(categoryName).stream()
                     .mapToInt(p -> p.getpPrice()).average().orElseThrow();
@@ -166,7 +166,7 @@ public class CommerceSystem {
                 }
             }catch (InputMismatchException e) {
                 System.out.println("숫자만 입력해주세요.");
-                //sc.next(); //잘못된 입력 제거
+                sc.nextLine();
             }
         }
         Product p = list.get(idx-1);
@@ -195,16 +195,24 @@ public class CommerceSystem {
                 }
                 if (sign == 1){
                     System.out.println("담을 수량을 입력해주세요.");
-                    int quantity = sc.nextInt();
+                    int quantity;
+                    while(true){
+                        quantity = sc.nextInt();
+                        if (quantity<=0){
+                            System.out.println("담을 개수를 정확히 입력해주세요.");
+                            continue;
+                        }
+                        break;
+                    }
                     orderProduct.addProductToBasket(p, quantity);
                     sc.nextLine();
                     break;
                 }else{
                     break;
                 }
-
             }catch(InputMismatchException e){
                 System.out.println("숫자만 입력해주세요.");
+                sc.nextLine();
             }
         }
     }

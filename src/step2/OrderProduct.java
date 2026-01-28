@@ -6,7 +6,8 @@ import java.util.Scanner;
 
 public class OrderProduct {
     // ---------- 속성 ----------
-    Scanner sc = new Scanner(System.in);
+    //Scanner sc = new Scanner(System.in);
+    Scanner sc = Main.sc;
     Category category = Category.getInstance();
     private List<Basket> basket = new ArrayList<>();
     private Customer customer;
@@ -27,12 +28,16 @@ public class OrderProduct {
      * @return boolean : 장바구니가 비었다면 false, 하나라도 들었다면 true
      */
     public boolean printBaskets() {
-        for (Basket b : basket){
-            System.out.printf("%15s | %4d 개 | 각 %d 원\n", b.getProduct().getpName(), b.getQuantity(), b.getProduct().getpPrice());
-        }
+
         if (basket.size()==0){
             System.out.println("장바구니에 아무것도 없네요! 쇼핑해보세요 ㅎㅎ");
             return false;
+        }
+        System.out.println("아래와 같이 주문하시겠습니까?");
+        System.out.println("[ 장바구니 내역 ]");
+
+        for (Basket b : basket) {
+            System.out.printf("%15s | %4d 개 | 각 %d 원\n", b.getProduct().getpName(), b.getQuantity(), b.getProduct().getpPrice());
         }
         return true;
     }
@@ -73,8 +78,7 @@ public class OrderProduct {
      * 주문 확정시 금액출력, 장바구니 비우기, 총계 출력, Product재고 차감
      */
     void checkBasket(){
-        System.out.println("아래와 같이 주문하시겠습니까?\n");
-        System.out.println("[ 장바구니 내역 ]");
+
 
         if(printBaskets()){
             System.out.println("[ 총 주문 금액 ]");
@@ -99,7 +103,7 @@ public class OrderProduct {
                 }
                 System.out.println("주문이 완료되었습니다! 총 금액: "+finalPrice+"원");
                 plusTotalPrice(me, finalPrice);
-                getBasket().removeAll(getBasket());
+                getBasket().clear();
             }
         }
     }

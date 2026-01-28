@@ -11,7 +11,9 @@ public class Administrator {
     Category category = Category.getInstance();
     OrderProduct o;
     private String PassWord = "admin123";
-    Scanner sc = new Scanner(System.in);
+    //Scanner sc = new Scanner(System.in);
+
+    Scanner sc = Main.sc;
 
     // ---------- 생성자 ----------
     public Administrator(OrderProduct orderProduct){
@@ -61,15 +63,15 @@ public class Administrator {
                 String pName = sc.nextLine();
 
                 System.out.print("가격을 입력해주세요: ");
-                int pPrice = sc.nextInt();
-                sc.nextLine();
+                int pPrice = inputPriceAndStock();
+                //sc.nextLine();
 
                 System.out.print("상품 설명을 입력해주세요: ");
                 String pDescription = sc.nextLine();
 
                 System.out.print("재고를 입력해주세요: ");
-                int pStock = sc.nextInt();
-                sc.nextLine();
+                int pStock = inputPriceAndStock();
+                //sc.nextLine();
 
                 Product p = new Product(pName, pPrice, pDescription, pStock);
 
@@ -114,7 +116,18 @@ public class Administrator {
         //sc.nextLine();
         System.out.println("어떤 카테고리에 상품을 추가하시겠습니까?");
         category.printCategoryList();
-        int num = sc.nextInt();
+        int num;
+        while(true){
+            try{
+                num = sc.nextInt();
+                if(num<category.getKeyList().size() && num>=0) break;
+                else System.out.println("카테고리를 정확하게 선택해주세요.");
+
+            }catch (InputMismatchException e){
+                System.out.println("카테고리 메뉴 번호만 입력하세요.");
+                sc.nextLine();
+            }
+        }
         String categoryName = category.getCategoryList(num-1);
         Product newProduct = makeNewProduct(categoryName);
         checkAndAddProduct(categoryName, newProduct);
@@ -132,25 +145,35 @@ public class Administrator {
     public int adminFixProduct(){
         System.out.print("수정할 상품명을 입력해주세요: ");
         String pNameToFix = sc.nextLine();
-        Optional<Product> productToFixBeforeChk = category.getProductByPName(pNameToFix);
+        Optional<Product> optionalProductToFix = category.getProductByPName(pNameToFix);
 
-        if(productToFixBeforeChk.isEmpty()){
+        if(optionalProductToFix.isEmpty()){
             System.out.println("유효한 상품명이 아닙니다.");
             return 1;
         }
-        Product productToFix = productToFixBeforeChk.orElseThrow();
+        Product productToFix = optionalProductToFix.orElseThrow();
         System.out.print("현재 상품 정보: ");
         productToFix.printProduct();
 
         System.out.println("수정할 항목을 선택해주세요:");
         System.out.println("1. 가격\n2. 설명\n3. 재고수량\n4. 취소");
-        int num = sc.nextInt();
+        int num;
+        while(true){
+            try{
+                num = sc.nextInt();
+                if(num<=4 && num>0) break;
+                else System.out.println("수정항목의 번호만 입력해주세요.");
+            }catch (InputMismatchException e){
+                System.out.println("수정 항목을 정확하게 선택해주세요. ");
+                sc.nextLine();
+            }
+        }
         sc.nextLine();
 
         if (num==1){
             System.out.println("현재 가격: "+productToFix.getpPrice());
             System.out.print("새로운 가격을 입력해주세요: ");
-            productToFix.setpPrice(CheckPriceAndStock());
+            productToFix.setpPrice(inputPriceAndStock());
         } else if (num==2){
             System.out.println("현재 설명: "+productToFix.getpDescription());
             System.out.print("새로운 설명을 입력해주세요: ");
@@ -159,7 +182,7 @@ public class Administrator {
         } else if (num ==3){
             System.out.println("현재 재고: "+productToFix.getpStock());
             System.out.print("변경된 재고를 입력해주세요: ");
-            productToFix.setpStock(CheckPriceAndStock());
+            productToFix.setpStock(inputPriceAndStock());
         } else if (num ==4){
             System.out.println("취소했습니다. ");
         } else{
@@ -230,20 +253,25 @@ public class Administrator {
     }
 
     /**
-     * 상품 수정 시 재고 또는 가격 부분에서 0 또는 음수가 입력되었는지 확인
+     * 상품 추가, 수정 시 재고 또는 가격 부분에서 0 또는 음수가 입력되었는지 확인
      * 정상적인 입력이라면 해당 입력 반환
      * @return
      */
-    public int CheckPriceAndStock(){
-        int temp;
+    public int inputPriceAndStock(){
+        int value;
         while(true){
-            temp = sc.nextInt();
-            sc.nextLine();
-            if (temp<=0){
-                System.out.println("0 또는 음수로 입력할 수 없습니다.");
-                continue;
+            try{
+                value = sc.nextInt();
+                sc.nextLine();
+                if (value<=0){
+                    System.out.println("0 또는 음수로 입력할 수 없습니다.");
+                    continue;
+                }
+                return value;
+            }catch (InputMismatchException e){
+                System.out.println("정확하게 입력하세요. ");
+                sc.nextLine();
             }
-            return temp;
         }
     }
 }
