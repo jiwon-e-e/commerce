@@ -65,11 +65,13 @@ public class OrderProduct {
             for (Basket b : basket){
                 if (b.getProduct().equals(p)){
                     b.setQuantity(num);
+                    //System.out.println("here!! problem!!");
                     return;
                 }
             }
 
             Basket newBasket = new Basket(p,num);
+            //System.out.println("*** "+newBasket.getProduct().getpName());
             basket.add(newBasket);
         }
     }
@@ -80,14 +82,15 @@ public class OrderProduct {
      * @param p 삭제할 상품
      */
     public void rmProductFromBasket(Product p){
-        Basket rmBasket = null;
-        for (Basket b : basket){
-            if (b.getProduct().equals(p)){
-                rmBasket = b;
-                break;
-            }
-        }
-        basket.remove(rmBasket);
+//        Basket rmBasket = null;
+//        for (Basket b : basket){
+//            if (b.getProduct().equals(p)){
+//                rmBasket = b;
+//                break;
+//            }
+//        }
+//        basket.remove(rmBasket);
+        basket.removeIf(b->b.getProduct().equals(p));
     }
 
     /**

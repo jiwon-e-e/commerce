@@ -55,12 +55,20 @@ public class Administrator {
      */
     public Product makeNewProduct(String categoryName){
         System.out.println(" [ "+categoryName+"카테고리에 상품 추가 ]");
-
+        sc.nextLine();
         while (true){
-            sc.nextLine();
             try{
                 System.out.print("상품명을 입력해주세요:");
                 String pName = sc.nextLine();
+
+                int chk = 0;
+                for (Product p :category.getProductByCategory(categoryName)){
+                    if (p.getpName().equalsIgnoreCase(pName)){
+                        System.out.println("이미 존재하는 상품명입니다. ");
+                        chk = 1;
+                    }
+                }
+                if (chk ==1) continue;
 
                 System.out.print("가격을 입력해주세요: ");
                 int pPrice = inputPriceAndStock();
