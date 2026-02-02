@@ -1,5 +1,7 @@
 package step2;
 
+import step2.exception.DuplicateProductException;
+
 import java.util.Optional;
 
 public class Administrator {
@@ -54,14 +56,20 @@ public class Administrator {
                 System.out.print("상품명을 입력해주세요:");
                 String pName = sc.nextLine();
 
-                int chk = 0;
-                for (Product p :category.getProductByCategory(categoryName)){
-                    if (p.getpName().equalsIgnoreCase(pName)){
-                        System.out.println("이미 존재하는 상품명입니다. ");
-                        chk = 1;
+                for (Product p: category.getProductByCategory(categoryName)){
+                    if(p.getpName().equalsIgnoreCase(pName)){
+                        throw new DuplicateProductException("이미 존재하는 상품명입니다.");
                     }
                 }
-                if (chk ==1) continue;
+
+//                int chk = 0;
+//                for (Product p :category.getProductByCategory(categoryName)){
+//                    if (p.getpName().equalsIgnoreCase(pName)){
+//                        System.out.println("이미 존재하는 상품명입니다. ");
+//                        chk = 1;
+//                    }
+//                }
+//                if (chk ==1) continue;
 
                 System.out.print("가격을 입력해주세요: ");
                 int pPrice = inputPriceAndStock();
@@ -76,6 +84,8 @@ public class Administrator {
             }catch (IllegalArgumentException e){
                 System.out.println(e.getMessage());
                 System.out.println("처음부터 입력을 시작합니다.");
+            }catch (DuplicateProductException e){
+                System.out.println(e.getMessage());
             }
         }
     }
