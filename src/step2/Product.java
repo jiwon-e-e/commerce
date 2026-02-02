@@ -1,5 +1,7 @@
 package step2;
 
+import step2.exception.OutOfStockAndPriceException;
+
 import java.util.Objects;
 
 public class Product {
@@ -16,18 +18,24 @@ public class Product {
     // ---------- 생성자 ----------
     Product(String pName, int pPrice, String pDescription, int pStock){
         this.pName = pName;
-        this.pPrice = pPrice;
+        setpPrice(pPrice);
         this.pDescription = pDescription;
-        this.pStock=  pStock;
+        setpStock(pStock);
         this.id = ++numbering;
     }
 
     // ---------- 기능 ----------
     public void setpStock(int stock){
+        if(stock<0){
+            throw new OutOfStockAndPriceException("재고가 부족합니다.");
+        }
         this.pStock = stock;
     }
 
     public void setpPrice(int price){
+        if(price<=0){
+            throw new OutOfStockAndPriceException("가격은 0 이상이어야합니다.");
+        }
         this.pPrice = price;
     }
 

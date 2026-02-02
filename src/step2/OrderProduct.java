@@ -1,5 +1,7 @@
 package step2;
 
+import step2.exception.OutOfStockAndPriceException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,11 +68,15 @@ public class OrderProduct {
     public void addProductToBasket(Product p, int num){
         if (category.chkStock(p,num)){
 
-            for (Basket b : basket){
-                if (b.getProduct().equals(p)){
-                    b.setQuantity(b.getQuantity()+num);
-                    return;
+            try {
+                for (Basket b : basket){
+                    if (b.getProduct().equals(p)){
+                        b.setQuantity(b.getQuantity()+num);
+                        return;
+                    }
                 }
+            } catch (OutOfStockAndPriceException e) {
+                System.out.println(e.getMessage());
             }
 
             Basket newBasket = new Basket(p,num);

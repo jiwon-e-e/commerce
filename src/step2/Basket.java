@@ -1,8 +1,7 @@
 package step2;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import step2.exception.OutOfStockAndPriceException;
+
 import java.util.Objects;
 
 public class Basket {
@@ -14,7 +13,8 @@ public class Basket {
     // 장바구니 담을 때 마다 새로 생성됨
     public Basket(Product product, int quantity) {
         this.product = product;
-        this.quantity = quantity;
+        //this.quantity = quantity;
+        setQuantity(quantity);
     }
 
     // ---------- 기능 ----------
@@ -27,6 +27,9 @@ public class Basket {
     }
 
     public void setQuantity(int quantity){
+        if (quantity < 0) {
+            throw new OutOfStockAndPriceException("재고가 부족합니다.");
+        }
         this.quantity = quantity;
     }
 
