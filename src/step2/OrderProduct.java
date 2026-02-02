@@ -2,23 +2,18 @@ package step2;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class OrderProduct {
     // ---------- 속성 ----------
-    //Scanner sc = new Scanner(System.in);
-    //Scanner sc = Main.sc;
     Category category = Category.getInstance();
     private List<Basket> basket = new ArrayList<>();
-    private Customer customer;
     private Input sc;
 
     // ============ 임시 고객 만들기 ============
     private Customer me = new Customer("권지원", "jiwonee@example.com", 300000);
     // =======================================
 
-    // ---------- 생성자 ---------- 기본생성자 사용
+    // ---------- 생성자 ----------
 
     public OrderProduct(Input input) {
         this.sc = input;
@@ -91,14 +86,6 @@ public class OrderProduct {
      * @param p 삭제할 상품
      */
     public void rmProductFromBasket(Product p){
-//        Basket rmBasket = null;
-//        for (Basket b : basket){
-//            if (b.getProduct().equals(p)){
-//                rmBasket = b;
-//                break;
-//            }
-//        }
-//        basket.remove(rmBasket);
         basket.removeIf(b->b.getProduct().equals(p));
     }
 
@@ -121,8 +108,12 @@ public class OrderProduct {
 
 
             System.out.println("1. 주문 확정      2. 메인으로 돌아가기");
-            int sign = sc.nextInt();
-            sc.nextLine();
+            int sign = 0;
+            try {
+                sign = sc.nextInt();
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
 
             if (sign ==1){
                 for (Basket b: getBasket()){

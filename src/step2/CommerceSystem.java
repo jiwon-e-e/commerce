@@ -8,7 +8,6 @@ public class CommerceSystem {
     // ---------- 속성 ----------
     private Input sc;
     Category category;
-    //Scanner sc = Main.sc;
     private final OrderProduct orderProduct;
     Administrator a ;
     Customer nowCustomer;
@@ -51,7 +50,6 @@ public class CommerceSystem {
                 try{
                     System.out.print("메뉴 번호 입력: ");
                     sign = sc.nextInt();
-                    sc.nextLine();
 
                     if(sign ==0 ){
                         System.out.println("커머스 플랫폼을 종료합니다.");
@@ -62,9 +60,8 @@ public class CommerceSystem {
                     }else{
                         break;
                     }
-                }catch (InputMismatchException e){
-                    System.out.println("숫자만 입력해주세요.");
-                    sc.nextLine();
+                }catch (IllegalArgumentException e){
+                    System.out.println(e.getMessage());
                 }
             }
             if (chk==1) break;
@@ -109,10 +106,8 @@ public class CommerceSystem {
 
             try {
                 sign = sc.nextInt();
-                //sc.nextLine();
-            } catch (InputMismatchException e) {
-                System.out.println("잘못된 입력입니다.");
-                sc.nextLine();
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
             }
             double averagePrice = category.getProductByCategory(categoryName).stream()
                     .mapToInt(p -> p.getpPrice()).average().orElseThrow();
@@ -136,7 +131,6 @@ public class CommerceSystem {
                 break;
             }else{
                 System.out.println("잘못된 입력입니다.");
-                continue;
             }
         }
 
@@ -163,15 +157,13 @@ public class CommerceSystem {
             System.out.print("확인하고 싶은 제품 번호를 입력해주세요: ");
             try{
                 idx = sc.nextInt();
-                sc.nextLine();
                 if (idx>=1 && idx <= list.size()){
                     break;
                 }else{
                     System.out.println("범위를 벗어난 입력입니다. ");
                 }
-            }catch (InputMismatchException e) {
-                System.out.println("숫자만 입력해주세요.");
-                sc.nextLine();
+            }catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
             }
         }
         Product p = list.get(idx-1);
@@ -193,7 +185,6 @@ public class CommerceSystem {
         while (true){
             try{
                 int sign = sc.nextInt();
-                sc.nextLine();
                 if (sign !=1 && sign != 2){
                     System.out.println("알맞은 숫자만 입력해주세요.");
                     continue;
@@ -218,14 +209,12 @@ public class CommerceSystem {
                     orderProduct.addProductToBasket(p, quantity);
                     System.out.println(p.getpName()+" "+quantity+" 개가 장바구니에 추가되었습니다. ");
 
-                    sc.nextLine();
                     break;
                 }else{
                     break;
                 }
-            }catch(InputMismatchException e){
-                System.out.println("숫자만 입력해주세요.");
-                sc.nextLine();
+            }catch(IllegalArgumentException e){
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -266,14 +255,19 @@ public class CommerceSystem {
         int sign;
         while (true){
             a.printAdminMenu();
-            sign = sc.nextInt();
+            try {
+                sign = sc.nextInt();
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+                continue;
+            }
+
             if (sign == 0) break;
 
             if (sign<1 || sign>4){
                 System.out.println("메뉴 번호를 입력해주세요.");
                 continue;
             }
-            sc.nextLine();
 
             switch(sign){
                 case 1:

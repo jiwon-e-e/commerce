@@ -1,26 +1,17 @@
 package step2;
 
-import javax.swing.text.html.Option;
-import java.util.InputMismatchException;
-import java.util.List;
 import java.util.Optional;
-import java.util.Scanner;
 
 public class Administrator {
 
     // ---------- 속성 ----------
     Category category = Category.getInstance();
-    //OrderProduct o;
     private String PassWord = "admin123";
-    //Scanner sc = new Scanner(System.in);
-
-    //Scanner sc = Main.sc;
-
     private Input sc;
 
     // ---------- 생성자 ----------
-    public Administrator(Input sc){
-        this.sc = sc;
+    public Administrator(Input input){
+        this.sc = input;
     }
 
 
@@ -58,7 +49,6 @@ public class Administrator {
      */
     public Product makeNewProduct(String categoryName){
         System.out.println(" [ "+categoryName+"카테고리에 상품 추가 ]");
-        sc.nextLine();
         while (true){
             try{
                 System.out.print("상품명을 입력해주세요:");
@@ -75,21 +65,17 @@ public class Administrator {
 
                 System.out.print("가격을 입력해주세요: ");
                 int pPrice = inputPriceAndStock();
-                //sc.nextLine();
 
                 System.out.print("상품 설명을 입력해주세요: ");
                 String pDescription = sc.nextLine();
 
                 System.out.print("재고를 입력해주세요: ");
                 int pStock = inputPriceAndStock();
-                //sc.nextLine();
 
-                Product p = new Product(pName, pPrice, pDescription, pStock);
-
-                return p;
-            }catch (InputMismatchException e){
-                System.out.println("첨부터 제대로 입력하세요 -_-");
-                sc.nextLine();
+                return new Product(pName, pPrice, pDescription, pStock);
+            }catch (IllegalArgumentException e){
+                System.out.println(e.getMessage());
+                System.out.println("처음부터 입력을 시작합니다.");
             }
         }
     }
@@ -104,8 +90,12 @@ public class Administrator {
         System.out.println("위 정보로 상품을 추가하시겠습니까?");
         System.out.println("1. 확인      2. 취소");
         while (true){
-            int chk = sc.nextInt();
-            sc.nextLine();
+            int chk=0;
+            try {
+                chk = sc.nextInt();
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
             if (chk==1){
                 //this.category.addProductWithCategoryName(categoryName, p);
                 this.category.getCategoryMap().get(categoryName).add(p);
@@ -124,7 +114,6 @@ public class Administrator {
      * checkAndAddProduct 호출해서 더블체크 후 추가
      */
     public void adminAddProduct(){
-        //sc.nextLine();
         System.out.println("어떤 카테고리에 상품을 추가하시겠습니까?");
         category.printCategoryList();
         int num;
@@ -134,15 +123,13 @@ public class Administrator {
                 if(num<category.getKeyList().size() && num>=0) break;
                 else System.out.println("카테고리를 정확하게 선택해주세요.");
 
-            }catch (InputMismatchException e){
-                System.out.println("카테고리 메뉴 번호만 입력하세요.");
-                sc.nextLine();
+            }catch (IllegalArgumentException e){
+                System.out.println(e.getMessage());
             }
         }
         String categoryName = category.getCategoryList(num-1);
         Product newProduct = makeNewProduct(categoryName);
         checkAndAddProduct(categoryName, newProduct);
-        sc.nextLine();
     }
 
     /**
@@ -174,12 +161,10 @@ public class Administrator {
                 num = sc.nextInt();
                 if(num<=4 && num>0) break;
                 else System.out.println("수정항목의 번호만 입력해주세요.");
-            }catch (InputMismatchException e){
-                System.out.println("수정 항목을 정확하게 선택해주세요. ");
-                sc.nextLine();
+            }catch (IllegalArgumentException e){
+                System.out.println(e.getMessage());
             }
         }
-        sc.nextLine();
 
         if (num==1){
             System.out.println("현재 가격: "+productToFix.getpPrice());
@@ -208,14 +193,12 @@ public class Administrator {
      * productName 이 없을 경우를 대비해 Optional 로 받고 풀어주기
      * 상품 삭제 후, 장바구니에 담긴 동일 Product 도 삭제
      */
-    public Optional<Product> adminRmProduct(){
-
-        //sc.nextLine();
+    public Optional<Product> adminRmProduct() {
         System.out.print("삭제할 상품명을 입력해주세요: ");
         String pNameToDelete = sc.nextLine();
         Optional<Product> optionalProductToDelete = category.getProductByPName(pNameToDelete);
 
-        if(optionalProductToDelete.isEmpty()){
+        if (optionalProductToDelete.isEmpty()) {
             System.out.println("유효한 상품명이 아닙니다.");
             return Optional.empty();
         }
@@ -227,32 +210,19 @@ public class Administrator {
         try {
             System.out.println("삭제하시겠습니까? (예: 1번)");
             int t = sc.nextInt();
-            sc.nextLine();
 
-            if (t==1){
-//                for (List<Product> list: category.getCategoryMap().values()){
-//                    try{
-//                        if(list.remove(productToDelete)){
-//                            System.out.printf("상품 %s 가 삭제되었습니다.\n",productToDelete.getpName());
-//                        }else{
-//                            System.out.println("삭제 실패...");
-//                        }
-//                        break;
-//                    }catch (Exception e){
-//                        System.out.println(e);
-//                    }
-//                }
+            if (t == 1) {
                 System.out.println("삭제를 시작합니다.");
                 return Optional.of(productToDelete);
 
-            }else{
+            } else {
                 System.out.println("삭제가 취소되었습니다.");
                 return Optional.empty();
             }
-        } catch (InputMismatchException e) {
-            throw new InputMismatchException("숫자만 입력하시오. . .");
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            return Optional.empty();
         }
-
     }
 
     /**
@@ -276,15 +246,13 @@ public class Administrator {
         while(true){
             try{
                 value = sc.nextInt();
-                sc.nextLine();
                 if (value<=0){
                     System.out.println("0 또는 음수로 입력할 수 없습니다.");
                     continue;
                 }
                 return value;
-            }catch (InputMismatchException e){
-                System.out.println("정확하게 입력하세요. ");
-                sc.nextLine();
+            }catch (IllegalArgumentException e){
+                System.out.println(e.getMessage());
             }
         }
     }
