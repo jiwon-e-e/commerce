@@ -27,7 +27,7 @@ public class Basket {
     }
 
     public void setQuantity(int quantity){
-        this.quantity += quantity;
+        this.quantity = quantity;
     }
 
     @Override

@@ -91,6 +91,7 @@ public class Category {
 
     //주문 확정시 해당 Product 의 Stock 차감
     public void minusStock(Product p, int num){
+        System.out.printf("%s 의 재고가 %d 개 -> %d 개로 수정되었습니다. \n",p.getpName(), p.getpStock(), p.getpStock()-num);
         p.setpStock(p.getpStock()-num);
     }
 

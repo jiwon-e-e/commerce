@@ -24,17 +24,14 @@ public class Product {
 
     // ---------- 기능 ----------
     public void setpStock(int stock){
-        System.out.printf("%s 의 재고가 %d 개 -> %d 개로 수정되었습니다. \n",pName, pStock, stock);
         this.pStock = stock;
     }
 
     public void setpPrice(int price){
-        System.out.printf("%s 의 가격이 %d 원 -> %d 원으로 수정되었습니다. \n",pName, pPrice, price);
         this.pPrice = price;
     }
 
     public void setpDescription(String str){
-        System.out.printf("%s 의 설명이 수정되었습니다. \n",pName);
         this.pDescription = str;
     }
 

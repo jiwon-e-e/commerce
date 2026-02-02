@@ -177,18 +177,24 @@ public class Administrator {
         }
 
         if (num==1){
+            int nowPrice = productToFix.getpPrice();
             System.out.println("현재 가격: "+productToFix.getpPrice());
             System.out.print("새로운 가격을 입력해주세요: ");
             productToFix.setpPrice(inputPriceAndStock());
+            System.out.printf("%s 의 가격이 %d 원 -> %d 원으로 수정되었습니다. \n",productToFix.getpName(), nowPrice, productToFix.getpPrice());
         } else if (num==2){
             System.out.println("현재 설명: "+productToFix.getpDescription());
             System.out.print("새로운 설명을 입력해주세요: ");
             String str = sc.nextLine();
             productToFix.setpDescription(str);
+            System.out.printf("%s 의 설명이 수정되었습니다. \n:",productToFix.getpDescription());
         } else if (num ==3){
-            System.out.println("현재 재고: "+productToFix.getpStock());
+            int nowStock = productToFix.getpStock();
+            System.out.println("현재 재고: "+nowStock);
             System.out.print("변경된 재고를 입력해주세요: ");
             productToFix.setpStock(inputPriceAndStock());
+            System.out.printf("%s 의 재고가 %d 개 -> %d 개로 수정되었습니다. \n",productToFix.getpName(), nowStock, productToFix.getpStock());
+
         } else if (num ==4){
             System.out.println("취소했습니다. ");
         } else{

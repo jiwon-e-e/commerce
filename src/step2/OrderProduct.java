@@ -68,8 +68,7 @@ public class OrderProduct {
 
             for (Basket b : basket){
                 if (b.getProduct().equals(p)){
-                    b.setQuantity(num);
-                    //System.out.println("here!! problem!!");
+                    b.setQuantity(b.getQuantity()+num);
                     return;
                 }
             }
