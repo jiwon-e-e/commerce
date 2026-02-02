@@ -48,7 +48,7 @@ public class Customer {
     }
 
     //고객 정보 출력
-    public void getCustomer(){
+    public void printCustomerInf(){
         System.out.println("성명: "+cName);
         System.out.println("메일: "+cMail);
         System.out.println("등급: "+rank);

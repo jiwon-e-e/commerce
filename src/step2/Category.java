@@ -129,5 +129,14 @@ public class Category {
             i++;
         }
     }
+
+    public boolean remove(Product product) {
+        for (List<Product> list : categoryMap.values()) {
+            if (list.remove(product)) {
+                return true; // 삭제 성공
+            }
+        }
+        return false; // 어떤 카테고리에도 없음
+    }
 }
 

@@ -2,19 +2,24 @@ package step2;
 
 import java.util.InputMismatchException;
 import java.util.List;
-import java.util.Scanner;
+import java.util.Optional;
 
 public class CommerceSystem {
     // ---------- 속성 ----------
-    Category category = Category.getInstance();
-    Scanner sc = Main.sc;
-    OrderProduct orderProduct = new OrderProduct();
-    Administrator a = new Administrator(orderProduct);
-    Customer nowCustomer = orderProduct.me;
-
+    private Input sc;
+    Category category;
+    //Scanner sc = Main.sc;
+    private final OrderProduct orderProduct;
+    Administrator a ;
+    Customer nowCustomer;
 
     // ---------- 생성자 ----------
-    public CommerceSystem(){
+    public CommerceSystem(Input input){
+        this.sc= input;
+        this.orderProduct = new OrderProduct(input);
+        this.category = Category.getInstance();
+        this.a = new Administrator(input);
+        this.nowCustomer  = orderProduct.getCustomer();
     };
 
     // ---------- 기능 ----------
@@ -77,7 +82,7 @@ public class CommerceSystem {
                     break;
                 case 7:
                     System.out.println(" [ 내 정보 ]");
-                    nowCustomer.getCustomer();
+                    nowCustomer.printCustomerInf();
                     break;
                 default:
                     System.out.println("잘못된 입력입니다. 다시 입력해주세요.");
@@ -236,7 +241,7 @@ public class CommerceSystem {
         int chk = 0;
 
         for (int i = 0; i < 3; i++) {
-            String pw = sc.next();
+            String pw = sc.nextLine();
             if (a.chkPW(pw)) {
                 System.out.println("관리자 로그인 완료 ! ! ");
                 chk = 1;
@@ -280,8 +285,8 @@ public class CommerceSystem {
                     break;
 
                 case 3:
-                    a.adminRmProduct();
-                    //orderProduct.rmProductFromBasket(productToDelete);
+                    Optional<Product> p = a.adminRmProduct();
+                    p.ifPresent(this::removeProduct);
                     break;
                 case 4:
                     a.adminPrintProduct();
@@ -289,5 +294,10 @@ public class CommerceSystem {
             }
 
         }
+    }
+
+    public void removeProduct(Product p ){
+        category.remove(p);
+        orderProduct.rmProductFromBasket(p);
     }
 }

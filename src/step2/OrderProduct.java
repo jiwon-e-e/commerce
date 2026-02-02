@@ -8,18 +8,27 @@ import java.util.stream.Collectors;
 public class OrderProduct {
     // ---------- 속성 ----------
     //Scanner sc = new Scanner(System.in);
-    Scanner sc = Main.sc;
+    //Scanner sc = Main.sc;
     Category category = Category.getInstance();
     private List<Basket> basket = new ArrayList<>();
     private Customer customer;
+    private Input sc;
 
     // ============ 임시 고객 만들기 ============
-    Customer me = new Customer("권지원", "jiwonee@example.com", 300000);
+    private Customer me = new Customer("권지원", "jiwonee@example.com", 300000);
     // =======================================
 
     // ---------- 생성자 ---------- 기본생성자 사용
 
+    public OrderProduct(Input input) {
+        this.sc = input;
+    }
+
     // ---------- 기능 ----------
+    public Customer getCustomer(){
+        return me;
+    }
+
     public List<Basket> getBasket() {
         return basket;
     }

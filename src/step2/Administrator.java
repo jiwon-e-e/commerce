@@ -1,5 +1,6 @@
 package step2;
 
+import javax.swing.text.html.Option;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Optional;
@@ -9,15 +10,17 @@ public class Administrator {
 
     // ---------- 속성 ----------
     Category category = Category.getInstance();
-    OrderProduct o;
+    //OrderProduct o;
     private String PassWord = "admin123";
     //Scanner sc = new Scanner(System.in);
 
-    Scanner sc = Main.sc;
+    //Scanner sc = Main.sc;
+
+    private Input sc;
 
     // ---------- 생성자 ----------
-    public Administrator(OrderProduct orderProduct){
-        this.o = orderProduct;
+    public Administrator(Input sc){
+        this.sc = sc;
     }
 
 
@@ -86,7 +89,7 @@ public class Administrator {
                 return p;
             }catch (InputMismatchException e){
                 System.out.println("첨부터 제대로 입력하세요 -_-");
-                sc.next();
+                sc.nextLine();
             }
         }
     }
@@ -205,7 +208,7 @@ public class Administrator {
      * productName 이 없을 경우를 대비해 Optional 로 받고 풀어주기
      * 상품 삭제 후, 장바구니에 담긴 동일 Product 도 삭제
      */
-    public void adminRmProduct(){
+    public Optional<Product> adminRmProduct(){
 
         //sc.nextLine();
         System.out.print("삭제할 상품명을 입력해주세요: ");
@@ -214,7 +217,7 @@ public class Administrator {
 
         if(optionalProductToDelete.isEmpty()){
             System.out.println("유효한 상품명이 아닙니다.");
-            return;
+            return Optional.empty();
         }
         Product productToDelete = optionalProductToDelete.orElseThrow();
 
@@ -227,26 +230,29 @@ public class Administrator {
             sc.nextLine();
 
             if (t==1){
-                for (List<Product> list: category.getCategoryMap().values()){
-                    try{
-                        if(list.remove(productToDelete)){
-                            System.out.printf("상품 %s 가 삭제되었습니다.\n",productToDelete.getpName());
-                        }else{
-                            System.out.println("삭제 실패...");
-                        }
-                        break;
-                    }catch (Exception e){
-                        System.out.println(e);
-                    }
-                }
-                o.rmProductFromBasket(productToDelete);
+//                for (List<Product> list: category.getCategoryMap().values()){
+//                    try{
+//                        if(list.remove(productToDelete)){
+//                            System.out.printf("상품 %s 가 삭제되었습니다.\n",productToDelete.getpName());
+//                        }else{
+//                            System.out.println("삭제 실패...");
+//                        }
+//                        break;
+//                    }catch (Exception e){
+//                        System.out.println(e);
+//                    }
+//                }
+                System.out.println("삭제를 시작합니다.");
+                return Optional.of(productToDelete);
 
             }else{
                 System.out.println("삭제가 취소되었습니다.");
+                return Optional.empty();
             }
         } catch (InputMismatchException e) {
             throw new InputMismatchException("숫자만 입력하시오. . .");
         }
+
     }
 
     /**
